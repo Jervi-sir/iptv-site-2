@@ -125,7 +125,7 @@ export default function Pricing1() {
                 <PricingDrawer
                   triggerDrawerComponent={
                     <DrawerTrigger asChild>
-                      <Button variant={plan.variant || 'default'} className="w-full">
+                      <Button variant={plan.variant || 'default'} className="w-full cursor-pointer">
                         Get Started
                       </Button>
                     </DrawerTrigger>

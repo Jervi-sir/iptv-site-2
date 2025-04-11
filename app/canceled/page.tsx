@@ -29,7 +29,7 @@ export default function CanceledPage() {
             </div>
             <div className="flex justify-center gap-4">
               <Link
-                href="/#pricing" // Or wherever your checkout starts
+                href="/#pricing_unlocked" // Or wherever your checkout starts
                 className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200"
                 prefetch={false}
               >

@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { HeroHeader } from '@/app/sections/hero5-header'
 import { AnimatedGroup } from '../../components/ui/animated-group'
 import { TextEffect } from '../../components/ui/text-effect'
-import LogoCloud1 from '../../components/logo-cloud-1'
 import LogoCloud2 from '../../components/logo-cloud-2'
 import PricingBanner from './pricing-banner'
 
@@ -42,7 +41,7 @@ export default function HeroSection() {
           <div className="h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.04)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)]" />
         </div>
         <section>
-          <div className="relative pt-24 md:pt-36">
+          <div className="relative pt-24 md:pt-28">
             <AnimatedGroup
               variants={{
                 container: {
@@ -70,7 +69,7 @@ export default function HeroSection() {
               }}
               className="absolute inset-0 -z-20">
               <Image
-                src="https://nsui.irung.me/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdg4jhba5c%2Fimage%2Fupload%2Fv1741605538%2Fnight-background_ni3vqb.jpg&w=3840&q=75"
+                src="/night-background.webp"
                 alt="background"
                 className="absolute inset-x-0 top-56 -z-20 hidden lg:top-32 dark:block"
                 width="3276"
@@ -85,7 +84,7 @@ export default function HeroSection() {
                   preset="fade-in-blur"
                   speedSegment={0.3}
                   as="h1"
-                  className="mt-8 text-balance text-6xl md:text-7xl lg:mt-16 xl:text-[5.25rem]">
+                  className="mt-4 text-balance text-6xl md:text-7xl lg:mt-8 xl:text-[5.25rem]">
                   Effortless Access to Curated Content
                 </TextEffect>
                 <TextEffect

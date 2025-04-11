@@ -35,7 +35,7 @@ function ErrorPageContent() {
             </div>
             <div className="flex justify-center gap-4">
               <Link
-                href="/#pricing" // Or your checkout start page
+                href="/#pricing_unlocked" // Or your checkout start page
                 className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200"
                 prefetch={false}
               >

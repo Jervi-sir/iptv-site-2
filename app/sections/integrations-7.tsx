@@ -20,11 +20,11 @@ export default function ChannelsSection() {
                 speedOnHover={10}>
                 {
                   [
-                    { id: '', img: 'https://fstv.lol/chaines-logo/cnews-logo-min.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/syfy-logo.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/mtv-logo.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/6ter-min.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/france-24-logo-min.png' },
+                    { id: '', img: '/cloud-logo/1.png' },
+                    { id: '', img: '/cloud-logo/2.png' },
+                    { id: '', img: '/cloud-logo/3.png' },
+                    { id: '', img: '/cloud-logo/4.png' },
+                    { id: '', img: '/cloud-logo/5.png' },
                   ].map((item, index) => (
                     <ContentCard key={index}>
                       <img src={item.img} style={{ width: 50 }} />
@@ -42,11 +42,11 @@ export default function ChannelsSection() {
                 reverse>
                 {
                   [
-                    { id: '', img: 'https://fstv.lol/chaines-logo/teletoon-logo-min.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/nickelodeon-logo-min.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/planete-aventure-logo-min.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/rmc-decouverte.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/canal-j-logo-min.png' },
+                    { id: '', img: '/cloud-logo/6.png' },
+                    { id: '', img: '/cloud-logo/7.png' },
+                    { id: '', img: '/cloud-logo/8.png' },
+                    { id: '', img: '/cloud-logo/9.png' },
+                    { id: '', img: '/cloud-logo/10.png' },
                   ].map((item, index) => (
                     <ContentCard key={index}>
                       <img src={item.img} style={{ width: 50 }} />
@@ -62,11 +62,11 @@ export default function ChannelsSection() {
                 speedOnHover={10}>
                 {
                   [
-                    { id: '', img: 'https://fstv.lol/chaines-logo/tiji-logo-min.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/cstar-logo-min.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/rmc-sport-1-logo-b.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/tmc-logo.png' },
-                    { id: '', img: 'https://fstv.lol/chaines-logo/canal-plus-logo.png' },
+                    { id: '', img: '/cloud-logo/11.png' },
+                    { id: '', img: '/cloud-logo/12.png' },
+                    { id: '', img: '/cloud-logo/13.png' },
+                    { id: '', img: '/cloud-logo/14.png' },
+                    { id: '', img: '/cloud-logo/15.png' },
                   ].map((item, index) => (
                     <ContentCard key={index}>
                       <img src={item.img} style={{ width: 50 }} />
