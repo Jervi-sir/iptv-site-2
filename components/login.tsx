@@ -54,7 +54,7 @@ export default function LoginPage() {
                                     Password
                                 </Label>
                                 <Button asChild variant="link" size="sm">
-                                    <Link href="#" className="link intent-info variant-ghost text-sm">
+                                    <Link href="/#pricing_unlocked" className="link intent-info variant-ghost text-sm">
                                         Forgot your Password ?
                                     </Link>
                                 </Button>
@@ -70,7 +70,7 @@ export default function LoginPage() {
                     <p className="text-accent-foreground text-center text-sm">
                         Don't have an account ?
                         <Button asChild variant="link" className="px-2">
-                            <Link href="#">Create account</Link>
+                            <Link href="/#pricing_unlocked">Create account</Link>
                         </Button>
                     </p>
                 </div>

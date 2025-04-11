@@ -11,13 +11,13 @@ export default function CallToAction() {
 
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <Button asChild size="lg">
-              <Link href="/">
+              <Link href="/#pricing_unlocked">
                 <span>Start Your Plan</span>
               </Link>
             </Button>
 
             <Button asChild size="lg" variant="outline">
-              <Link href="/">
+              <Link href="/#pricing_unlocked">
                 <span>Contact Sales</span>
               </Link>
             </Button>

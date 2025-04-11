@@ -91,7 +91,7 @@ export default function ChannelsSection() {
               variant="outline"
               size="sm"
               asChild>
-              <Link href="/signup">Start My Subscription</Link>
+              <Link href="/#pricing_unlocked">Start My Subscription</Link>
             </Button>
           </div>
         </div>

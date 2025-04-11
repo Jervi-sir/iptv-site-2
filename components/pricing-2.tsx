@@ -35,7 +35,7 @@ export default function Pricing2() {
 
                         <CardFooter className="mt-auto">
                             <Button asChild variant="outline" className="w-full">
-                                <Link href="">Get Started</Link>
+                                <Link href="/#pricing_unlocked">Get Started</Link>
                             </Button>
                         </CardFooter>
                     </Card>
@@ -64,7 +64,7 @@ export default function Pricing2() {
 
                             <CardFooter>
                                 <Button asChild className="w-full">
-                                    <Link href="">Get Started</Link>
+                                    <Link href="/#pricing_unlocked">Get Started</Link>
                                 </Button>
                             </CardFooter>
                         </div>
@@ -92,7 +92,7 @@ export default function Pricing2() {
 
                         <CardFooter className="mt-auto">
                             <Button asChild variant="outline" className="w-full">
-                                <Link href="">Get Started</Link>
+                                <Link href="/#pricing_unlocked">Get Started</Link>
                             </Button>
                         </CardFooter>
                     </Card>
