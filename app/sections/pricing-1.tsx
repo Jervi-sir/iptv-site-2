@@ -86,12 +86,12 @@ export default function Pricing1() {
           <h1 className="text-center text-4xl font-semibold lg:text-5xl">
             Flexible Plans for Content Access
           </h1>
-          <p>
+          <p id="pricing_unlocked" >
             Select a plan tailored to your needs and access a vast library of curated content with no contracts or hidden fees.
           </p>
         </div>
 
-        <div id="pricing_unlocked" className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
+        <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
           {pricingPlans.map((plan, index) => (
             <Card
               key={index}
