@@ -91,7 +91,7 @@ export default function Pricing1() {
           </p>
         </div>
 
-        <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
+        <div id="#pricing_unlocked" className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
           {pricingPlans.map((plan, index) => (
             <Card
               key={index}
