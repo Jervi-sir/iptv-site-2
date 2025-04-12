@@ -15,6 +15,8 @@ import { InvoiceTable } from "./components/invoice-table";
 import { AccordionInfo } from "./components/accordion-info";
 import { SelectPayment } from "./components/select-payment";
 
+// name=Jane Smith&email=jane.smith@example.com&address=789 Main St&invoiceId=INV-2025-002&issueDate=April 12, 2025&dueDate=April 19, 2025&status=Pending&priceId=price_1O4oDNI8y7N0oWUMJD6wEvBh&paymentMethod=credit-card
+// name, email, address, invoiceId, issueDate, dueDate, status, priceId, paymentMethod
 
 export default function InvoiceClient({ customer, invoice, urlPriceId, urlPaymentMethod }: any) {
   const [isLoading, setIsLoading] = React.useState(false);
