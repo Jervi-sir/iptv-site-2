@@ -90,11 +90,11 @@ export default function InvoiceClient({ customer, invoice, urlPriceId, urlPaymen
   const selectedPriceId = selectedProduct || urlPriceId;
 
   return (
-    <>
+    <div className="p-4">
       <Style />
       <Card className="max-w-2xl mx-auto my-8 card">
         <CardHeader className="card-header">
-          <div className="flex justify-between">
+          <div className="flex justify-between flex-col sm:flex-row gap-3">
             <div className="flex gap-3 items-center">
               <Logo />
               <CardTitle className="text-2xl">Invoice #{invoice.number}</CardTitle>
@@ -103,7 +103,7 @@ export default function InvoiceClient({ customer, invoice, urlPriceId, urlPaymen
               onClick={handlePrint}
               variant="outline"
               size="sm"
-              className="cursor-pointer no-print"
+              className="cursor-pointer no-print w-fit"
             >
               <Printer className="mr-2 h-4 w-4" />
               Print
@@ -119,15 +119,15 @@ export default function InvoiceClient({ customer, invoice, urlPriceId, urlPaymen
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 <Customer customer={customer} />
                 <div>
-                  <h3 className="font-semibold text-lg text-right">Pay To:</h3>
-                  <p className="text-right">Worldwide</p>
+                  <h3 className="font-semibold text-lg text-left sm:text-right">Pay To:</h3>
+                  <p className="text-left sm:text-right">Worldwide</p>
                 </div>
               </div>
 
               <Separator className="my-4 separator" />
 
               {/* Invoice Details */}
-              <div className="flex flex-row justify-between items-start">
+              <div className="flex flex-col gap-3 sm:flex-row justify-between items-start">
                 <Invoice invoice={invoice} />
                 <div className="space-y-1">
                   <SelectPrice
@@ -187,6 +187,6 @@ export default function InvoiceClient({ customer, invoice, urlPriceId, urlPaymen
           )}
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }
