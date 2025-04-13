@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { PersonalInfoForm } from "./personal-info-form";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { pricingPlans } from "@/db/offers";
 import { PaymentForm } from "./payment-form";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
-import { useSearchParams } from "next/navigation"; // Add this import
+import { useSearchParams } from "next/navigation";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
@@ -49,24 +49,45 @@ interface FormData {
 }
 
 export const CheckoutLayout = () => {
-  const [step, setStep] = useState(1);
-  const [clientSecret, setClientSecret] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const [isComplete, setIsComplete] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CheckoutContentWrapper />
+    </Suspense>
+  );
+};
 
-  // Use useSearchParams to get query parameters
+const CheckoutContentWrapper = () => {
   const searchParams = useSearchParams();
   const planId = searchParams.get("plan")?.toLowerCase();
   const billingParam = searchParams.get("billing");
 
+  return <CheckoutContent planId={planId} billingParam={billingParam} />;
+};
+
+interface CheckoutContentProps {
+  planId?: string | null;
+  billingParam?: string | null;
+}
+
+const CheckoutContent = ({ planId, billingParam }: CheckoutContentProps) => {
+  const [step, setStep] = useState(1);
+  const [clientSecret, setClientSecret] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [isComplete, setIsComplete] = useState(false);
+  // Initialize with default plan "pro" and default billing "monthly"
+  const [selectedPlan, setSelectedPlan] = useState<string>("pro");
+  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+
   useEffect(() => {
     if (planId && billingParam && ["monthly", "yearly"].includes(billingParam)) {
-      console.log("Advancing to step 2:", { planId, billingParam }); // Debug log
+      console.log("Overriding with query params:", { planId, billingParam });
       setSelectedPlan(planId);
       setBilling(billingParam as "monthly" | "yearly");
-      setStep(2);
+      setStep(2); // Skip to step 2 if query params are provided
+    } else {
+      console.log("Using default plan: pro, billing: monthly");
+      // Default to step 1 to show plan selection, but with "pro" preselected
+      setStep(1);
     }
   }, [planId, billingParam]);
 
@@ -232,9 +253,13 @@ export const CheckoutLayout = () => {
                                 key={plan.priceId}
                                 className={`rounded-xl flex overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${
                                   plan.isPopular
-                                    ? "border-2 border-violet-400 relative"
+                                    ? "shadow-md relative" //border-2  border-violet-400
                                     : "bg-white shadow-md"
-                                }`}
+                                } ${
+                                  selectedPlan === plan.title.toLowerCase()
+                                    ? "border-2 border-green-500 relative bg-green-200 shadow-md"
+                                    : ""
+                                }`} // Highlight selected plan
                               >
                                 {plan.isPopular && (
                                   <div className="absolute top-0 right-0 bg-violet-400 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
@@ -264,13 +289,19 @@ export const CheckoutLayout = () => {
                                     <Button
                                       className={`w-full ${
                                         plan.isPopular ? "btn-primary" : "btn-secondary"
+                                      } ${
+                                        selectedPlan === plan.title.toLowerCase()
+                                          ? "bg-green-500 hover:bg-green-600"
+                                          : ""
                                       }`}
                                       onClick={() => {
                                         setSelectedPlan(plan.title.toLowerCase());
                                         nextStep();
                                       }}
                                     >
-                                      Choose {plan.title}
+                                      {selectedPlan === plan.title.toLowerCase()
+                                        ? "Continue with " + plan.title
+                                        : "Choose " + plan.title}
                                     </Button>
                                   </div>
                                 </div>
