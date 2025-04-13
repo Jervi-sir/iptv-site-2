@@ -1,43 +1,48 @@
-// pages/api/get_payment_intent.ts
-import { NextRequest, NextResponse } from 'next/server';
+// app/api/get_session/route.ts
+import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    console.log('searchParams: ', searchParams)
-    const paymentIntentId = searchParams.get('payment_intent');
-    console.log('paymentIntentId: ', paymentIntentId)
+    const paymentIntentId = searchParams.get('session_id'); // It's a pi_ ID
+    console.log('paymentIntentId:', paymentIntentId);
+
     if (!paymentIntentId) {
+      return NextResponse.json({ error: 'Payment Intent ID is required' }, { status: 400 });
+    }
+
+    if (!paymentIntentId.startsWith('pi_')) {
       return NextResponse.json(
-        { error: 'Payment intent ID is required' },
+        { error: 'Invalid Payment Intent ID. Expected a Payment Intent ID (starts with pi_)' },
         { status: 400 }
       );
     }
 
+    // Retrieve the Payment Intent from Stripe
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
-      expand: ['payment_method'], // Expand payment_method to get card details
+      expand: ['payment_method'], // Expand payment method details
     });
-    console.log('paymentIntent: ', paymentIntent)
+    console.log('paymentIntent:', paymentIntent);
 
-    if (!paymentIntent) {
-      return NextResponse.json(
-        { error: 'Payment intent not found' },
-        { status: 404 }
-      );
-    }
+    // Payment Intents don't have line items, so use metadata or a database
+    // Example: Assume metadata contains line items or fetch from your DB
+    const lineItems = paymentIntent.metadata.lineItems
+      ? JSON.parse(paymentIntent.metadata.lineItems)
+      : [];
 
     return NextResponse.json({
-      amount: paymentIntent.amount / 100, // Convert from cents to dollars
-      currency: paymentIntent.currency,
+      amount: paymentIntent.amount ? paymentIntent.amount / 100 : 0, // Convert cents to dollars
       paymentMethod: paymentIntent.payment_method,
       date: paymentIntent.created, // Unix timestamp
+      currency: paymentIntent.currency,
+      lineItems, // Empty or from metadata/DB
     });
-  } catch (error: any) {
-    console.error('Internal Error:', error);
+  } catch (err: any) {
+    console.error('Stripe error:', err);
     return NextResponse.json(
-      { error: `Internal Server Error: ${error.message}` },
-      { status: 500 }
+      { error: err.message || 'Failed to retrieve payment details' },
+      { status: err.statusCode || 500 }
     );
   }
 }

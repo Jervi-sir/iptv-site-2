@@ -16,14 +16,15 @@ interface SessionDetails {
 
 function SuccessPageContent() {
   const searchParams = useSearchParams();
-  const session_id = searchParams.get('session_id');
+  const session_id = searchParams.get('payment_intent');
   const [sessionDetails, setSessionDetails] = useState<SessionDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDark, setIsDark] = useState(false); // Local variable for theme
 
   useEffect(() => {
+    console.log('session_id: ', session_id)
     if (!session_id) {
-      window.location.href = '/error?message=No%20payment%20session%20found';
+      // window.location.href = '/error?message=No%20payment%20session%20found';
       return;
     }
 
@@ -38,7 +39,8 @@ function SuccessPageContent() {
         const data = await response.json();
         setSessionDetails(data);
       } catch (err: any) {
-        window.location.href = `/error?message=${encodeURIComponent(err.message)}`;
+        console.log('err: ', err)
+        // window.location.href = `/error?message=${encodeURIComponent(err.message)}`;
       } finally {
         setLoading(false);
       }
