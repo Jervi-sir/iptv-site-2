@@ -32,9 +32,8 @@
   --color-input: hsl(240 6% 90%);
   --color-ring: hsl(254 79% 74%);
 
-  /* Assuming iptv-purple and iptv-blue map to primary and accent */
-  --color-iptv-purple: hsl(254 79% 74%);
-  --color-iptv-blue: hsl(199 84% 49%);
+  --color-site-purple: hsl(254 79% 74%);
+  --color-site-blue: hsl(199 84% 49%);
 
   /* Radius */
   --radius-default: 0.75rem;
@@ -66,24 +65,24 @@ body {
 
 /* Component styles */
 .gradient-heading {
-  background: linear-gradient(to right, var(--color-iptv-purple), var(--color-iptv-blue));
+  background: linear-gradient(to right, var(--color-site-purple), var(--color-site-blue));
   background-clip: text;
   color: transparent;
 }
 
 .gradient-bg {
-  background: linear-gradient(to bottom right, var(--color-iptv-purple), var(--color-iptv-blue));
+  background: linear-gradient(to bottom right, var(--color-site-purple), var(--color-site-blue));
 }
 
 .card-highlight {
-  border: 1px solid rgba(254, 79%, 74%, 0.2); /* iptv-purple/20 */
+  border: 1px solid rgba(254, 79%, 74%, 0.2); /* site-purple/20 */
   background: hsl(0 0% 100%);
-  box-shadow: 0 10px 15px -3px rgba(254, 79%, 74%, 0.1); /* shadow-lg with iptv-purple/10 */
+  box-shadow: 0 10px 15px -3px rgba(254, 79%, 74%, 0.1); /* shadow-lg with site-purple/10 */
   border-radius: var(--radius-default);
 }
 
 .btn-primary {
-  background: var(--color-iptv-purple);
+  background: var(--color-site-purple);
   color: hsl(0 0% 100%);
   border-radius: 9999px; /* rounded-full */
   padding: 0.75rem 1.5rem; /* px-6 py-3 */
@@ -93,13 +92,13 @@ body {
 }
 
 .btn-primary:hover {
-  background: color-mix(in srgb, var(--color-iptv-purple) 90%, black);
+  background: color-mix(in srgb, var(--color-site-purple) 90%, black);
   transform: scale(1.05);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* hover:shadow-md */
 }
 
 .btn-secondary {
-  background: var(--color-iptv-blue);
+  background: var(--color-site-blue);
   color: hsl(0 0% 100%);
   border-radius: 9999px;
   padding: 0.75rem 1.5rem;
@@ -109,7 +108,7 @@ body {
 }
 
 .btn-secondary:hover {
-  background: color-mix(in srgb, var(--color-iptv-blue) 90%, black);
+  background: color-mix(in srgb, var(--color-site-blue) 90%, black);
   transform: scale(1.05);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }

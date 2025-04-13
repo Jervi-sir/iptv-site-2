@@ -94,9 +94,7 @@ export const PaymentForm = ({
                   email: formData.email || "",
                 },
               },
-
             }}
-
           />
         </div>
       </div>

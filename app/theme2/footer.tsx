@@ -6,15 +6,15 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-iptv-deep-purple text-white pt-16 pb-8 px-6 md:px-12 bg-violet-400">
+    <footer className="bg-site-deep-purple text-white pt-16 pb-8 px-6 md:px-12 bg-violet-400">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-center items-center">
           <div className='flex flex-col justify-center items-center gap-4'>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-iptv-purple to-iptv-blue bg-clip-text text-white">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-site-purple to-site-blue bg-clip-text text-white">
               { process.env.NEXT_PUBLIC_SITE_NAME }
             </h3>
             <p className="text-white ">
-              Your premium IPTV solution for unlimited entertainment on any device, anywhere.
+              Your premium solution for unlimited entertainment on any device, anywhere.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-300 hover:text-white transition-colors">
@@ -32,13 +32,13 @@ const Footer = () => {
             </div>
             <ul className="space-y-3 flex flex-col justify-between items-center">
               {/* <li className="flex items-center">
-                <Mail size={18} className="mr-2 text-iptv-purple" />
+                <Mail size={18} className="mr-2 text-site-purple" />
                 <a href="mailto:support@streamsizzle.com" className="text-gray-300 hover:text-white transition-colors">
                   support@streamsizzle.com
                 </a>
               </li>
               <li className="flex items-center">
-                <Phone size={18} className="mr-2 text-iptv-purple" />
+                <Phone size={18} className="mr-2 text-site-purple" />
                 <a href="tel:+1234567890" className="text-gray-300 hover:text-white transition-colors">
                   +1 (234) 567-890
                 </a>
