@@ -24,7 +24,7 @@ function SuccessPageContent() {
   useEffect(() => {
     console.log('session_id: ', session_id)
     if (!session_id) {
-      // window.location.href = '/error?message=No%20payment%20session%20found';
+      window.location.href = '/error?message=No%20payment%20session%20found';
       return;
     }
 
@@ -40,7 +40,7 @@ function SuccessPageContent() {
         setSessionDetails(data);
       } catch (err: any) {
         console.log('err: ', err)
-        // window.location.href = `/error?message=${encodeURIComponent(err.message)}`;
+        window.location.href = `/error?message=${encodeURIComponent(err.message)}`;
       } finally {
         setLoading(false);
       }

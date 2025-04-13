@@ -25,6 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+         <script
+          dangerouslySetInnerHTML={{
+            __html: IN_APP_BROWSER_REDIRECT_SCRIPT,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -40,3 +47,32 @@ export default function RootLayout({
     </html>
   );
 }
+
+const IN_APP_BROWSER_REDIRECT_SCRIPT = `\
+(function () {
+  const ua = navigator.userAgent.toLowerCase();
+  const isIOS = /iphone|ipad|ipod/.test(ua);
+  const isAndroid = /android/.test(ua);
+  const isInAppBrowser = (
+    ua.includes('instagram') ||
+    ua.includes('fban') || ua.includes('fbav') || // Facebook
+    ua.includes('twitter') || // Twitter/X
+    ua.includes('tiktok') || // TikTok
+    ua.includes('wv') || // Generic WebView indicator
+    (ua.includes('safari') === false && ua.includes('chrome') === false && ua.includes('firefox') === false)
+  );
+
+  if (isInAppBrowser) {
+    const currentUrl = window.location.href;
+    let externalUrl = currentUrl;
+
+    if (isIOS) {
+      externalUrl = 'x-safari-' + currentUrl;
+    } else if (isAndroid) {
+      externalUrl = currentUrl;
+    }
+
+    window.location.href = externalUrl;
+  }
+})();
+`;
