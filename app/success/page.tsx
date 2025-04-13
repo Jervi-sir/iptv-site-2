@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react'; // Import Suspense
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AnimatedGroup } from '@/components/ui/animated-group';
 import { Loader2 } from 'lucide-react';
@@ -13,40 +13,40 @@ interface SessionDetails {
   currency: string;
 }
 
-// Inner component that uses useSearchParams
 function SuccessPageContent() {
   const searchParams = useSearchParams();
-  const session_id = searchParams.get('session_id');
+  const paymentIntentId = searchParams.get('payment_intent'); // Changed from session_id
   const [sessionDetails, setSessionDetails] = useState<SessionDetails | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!session_id) {
-      // Redirect to error page if no session_id
-      window.location.href = '/error?message=No%20payment%20session%20found';
+    if (!paymentIntentId) {
+      // Redirect to error page if no payment_intent
+      window.location.href = '/error?message=No%20payment%20intent%20found';
       return;
     }
 
-    const fetchSessionDetails = async () => {
+    const fetchPaymentIntentDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/get_session?session_id=${session_id}`);
+        const response = await fetch(`/api/get_session?payment_intent=${paymentIntentId}`);
         if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to fetch session details');
+          const text = await response.text(); // Log raw response
+          const data = JSON.parse(text); // Attempt to parse
+          throw new Error(data.error || 'Failed to fetch payment intent details');
         }
         const data = await response.json();
         setSessionDetails(data);
       } catch (err: any) {
-        // Redirect to error page with message
+        console.error('Fetch error:', err);
         window.location.href = `/error?message=${encodeURIComponent(err.message)}`;
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSessionDetails();
-  }, [session_id]);
+    fetchPaymentIntentDetails();
+  }, [paymentIntentId]);
 
   if (loading) {
     return (
@@ -87,7 +87,6 @@ function SuccessPageContent() {
   );
 }
 
-// Layout component remains unchanged
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-zinc-950">
     <main className="overflow-hidden">
@@ -104,7 +103,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-// Wrap SuccessPageContent in Suspense
 export default function SuccessPage() {
   return (
     <Suspense

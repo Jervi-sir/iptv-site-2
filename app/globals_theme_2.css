@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Define theme variables for Tailwind v4 */
+:root {
+  /* Core colors */
+  --color-background: hsl(258 100% 98%);
+  --color-foreground: hsl(240 10% 4%);
+
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(240 10% 4%);
+
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(240 10% 4%);
+
+  --color-primary: hsl(254 79% 74%);
+  --color-primary-foreground: hsl(0 0% 100%);
+
+  --color-secondary: hsl(253 20% 54%);
+  --color-secondary-foreground: hsl(0 0% 100%);
+
+  --color-muted: hsl(240 5% 96%);
+  --color-muted-foreground: hsl(240 4% 46%);
+
+  --color-accent: hsl(199 84% 49%);
+  --color-accent-foreground: hsl(0 0% 100%);
+
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+
+  --color-border: hsl(240 6% 90%);
+  --color-input: hsl(240 6% 90%);
+  --color-ring: hsl(254 79% 74%);
+
+  /* Assuming iptv-purple and iptv-blue map to primary and accent */
+  --color-iptv-purple: hsl(254 79% 74%);
+  --color-iptv-blue: hsl(199 84% 49%);
+
+  /* Radius */
+  --radius-default: 0.75rem;
+
+  /* Sidebar colors */
+  --color-sidebar-background: hsl(0 0% 98%);
+  --color-sidebar-foreground: hsl(240 5% 26%);
+  --color-sidebar-primary: hsl(254 79% 74%);
+  --color-sidebar-primary-foreground: hsl(0 0% 100%);
+  --color-sidebar-accent: hsl(240 5% 96%);
+  --color-sidebar-accent-foreground: hsl(240 6% 10%);
+  --color-sidebar-border: hsl(220 13% 91%);
+  --color-sidebar-ring: hsl(217 91% 60%);
+}
+
+/* Global styles (replacing * { @apply border-border }) */
+* {
+  box-sizing: border-box;
+  /* Avoid overriding Preflight's border defaults unless necessary */
+  /* border: 1px solid var(--color-border); */
+}
+
+/* Body styles */
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Component styles */
+.gradient-heading {
+  background: linear-gradient(to right, var(--color-iptv-purple), var(--color-iptv-blue));
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-bg {
+  background: linear-gradient(to bottom right, var(--color-iptv-purple), var(--color-iptv-blue));
+}
+
+.card-highlight {
+  border: 1px solid rgba(254, 79%, 74%, 0.2); /* iptv-purple/20 */
+  background: hsl(0 0% 100%);
+  box-shadow: 0 10px 15px -3px rgba(254, 79%, 74%, 0.1); /* shadow-lg with iptv-purple/10 */
+  border-radius: var(--radius-default);
+}
+
+.btn-primary {
+  background: var(--color-iptv-purple);
+  color: hsl(0 0% 100%);
+  border-radius: 9999px; /* rounded-full */
+  padding: 0.75rem 1.5rem; /* px-6 py-3 */
+  font-weight: 500; /* font-medium */
+  transition: all 200ms ease;
+  transform: scale(1);
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--color-iptv-purple) 90%, black);
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* hover:shadow-md */
+}
+
+.btn-secondary {
+  background: var(--color-iptv-blue);
+  color: hsl(0 0% 100%);
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 200ms ease;
+  transform: scale(1);
+}
+
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--color-iptv-blue) 90%, black);
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/*
+|--------------------------------------------------------------------------
+| App CSS
+|--------------------------------------------------------------------------
+*/
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em color-mix(in srgb, var(--color-primary) 66%, transparent));
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em color-mix(in srgb, var(--color-accent) 73%, transparent));
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: hsl(0 0% 53%); /* #888 */
+}
