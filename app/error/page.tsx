@@ -46,14 +46,14 @@ function ErrorPageContent() {
             </div>
             <div className="flex justify-center gap-4">
               <Link
-                href="/#pricing_unlocked"
+                href="/checkout"
                 className={`inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${isDark ? 'bg-gray-50 text-gray-900 hover:bg-gray-200 focus:ring-gray-300 focus:ring-offset-zinc-950' : 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500'}`}
                 prefetch={false}
               >
                 Retry Payment
               </Link>
               <Link
-                href="/"
+                href="/checkout"
                 className={`inline-flex items-center justify-center px-4 py-2 border text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${isDark ? 'border-gray-700 text-gray-300 bg-zinc-950 hover:bg-zinc-900 focus:ring-gray-300 focus:ring-offset-zinc-950' : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-gray-500'}`}
                 prefetch={false}
               >
