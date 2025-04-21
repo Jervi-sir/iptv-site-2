@@ -1,14 +1,14 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle } from "lucide-react";
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle } from 'lucide-react';
 
 export const SuccessMessage = ({
   plan,
-  billing,
   price,
+  duration,
 }: {
   plan: { name: string };
-  billing: string;
   price: number;
+  duration: string;
 }) => (
   <Card className="shadow-lg max-w-2xl mx-auto animate-scale-in">
     <CardContent className="p-8 text-center">
@@ -25,11 +25,11 @@ export const SuccessMessage = ({
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="text-gray-500 text-left">Plan:</div>
             <div className="text-right font-medium">{plan.name}</div>
-            <div className="text-gray-500 text-left">Billing:</div>
-            <div className="text-right font-medium capitalize">{billing}</div>
+            <div className="text-gray-500 text-left">Duration:</div>
+            <div className="text-right font-medium capitalize">{duration}</div>
             <div className="text-gray-500 text-left">Price:</div>
-            <div className="text-right font-development-medium">
-              ${price.toFixed(2)}/{billing === "yearly" ? "mo (billed yearly)" : "month"}
+            <div className="text-right font-medium">
+              ${price.toFixed(2)}/{duration}
             </div>
           </div>
         </div>

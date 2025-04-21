@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { ArrowLeft, CreditCard } from "lucide-react";
-import { useState } from "react";
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { ArrowLeft, CreditCard } from 'lucide-react';
+import { useState } from 'react';
 
 export const PaymentForm = ({
   formData,
@@ -20,14 +20,14 @@ export const PaymentForm = ({
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isPaymentElementReady, setIsPaymentElementReady] = useState(false); // New state for PaymentElement readiness
+  const [isPaymentElementReady, setIsPaymentElementReady] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
 
     if (!stripe || !elements || !clientSecret) {
-      setErrorMessage("Payment system not ready.");
+      setErrorMessage('Payment system not ready.');
       setIsProcessing(false);
       return;
     }
@@ -80,18 +80,18 @@ export const PaymentForm = ({
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-violet-400">
               <span className="sr-only">Loading payment form...</span>
             </div>
-            <span className="ml-2 text-gray-600">Loading payment form...</span>
+            <span className="ml-2 text-gray-600>">Loading payment form...</span>
           </div>
         )}
-        <div className={`${isPaymentElementReady ? "block" : "hidden"}`}>
+        <div className={`${isPaymentElementReady ? 'block' : 'hidden'}`}>
           <PaymentElement
             onReady={() => {
-              setIsPaymentElementReady(true); // Set ready when PaymentElement loads
+              setIsPaymentElementReady(true);
             }}
             options={{
               defaultValues: {
                 billingDetails: {
-                  email: formData.email || "",
+                  email: formData.email || '',
                 },
               },
             }}
@@ -105,9 +105,9 @@ export const PaymentForm = ({
         <Button
           type="submit"
           className="btn-primary flex-grow"
-          disabled={isProcessing || !stripe || !elements || !isPaymentElementReady} // Disable until ready
+          disabled={isProcessing || !stripe || !elements || !isPaymentElementReady}
         >
-          {isProcessing ? "Processing..." : "Complete Subscription"}
+          {isProcessing ? 'Processing...' : 'Complete Subscription'}
         </Button>
       </div>
     </form>

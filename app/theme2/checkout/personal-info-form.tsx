@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Mail, Phone, User, Globe, MapPin } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Mail, Phone, User } from 'lucide-react';
 
 export const PersonalInfoForm = ({
   formData,
@@ -16,13 +16,18 @@ export const PersonalInfoForm = ({
   nextStep: () => void;
   prevStep: () => void;
 }) => (
-  <form onSubmit={(e) => { e.preventDefault(); nextStep(); }}>
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      nextStep();
+    }}
+  >
     <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
     <div className="space-y-4">
       {[
-        { id: "fullName", label: "Full Name", Icon: User, type: "text" },
-        { id: "email", label: "Email Address", Icon: Mail, type: "email" },
-        { id: "phone", label: "Phone Number", Icon: Phone, type: "tel" },
+        { id: 'fullName', label: 'Full Name', Icon: User, type: 'text' },
+        { id: 'email', label: 'Email Address', Icon: Mail, type: 'email' },
+        { id: 'phone', label: 'Phone Number', Icon: Phone, type: 'tel' },
       ].map(({ id, label, Icon, type }) => (
         <div key={id} className="space-y-2">
           <Label htmlFor={id} className="flex items-center">
@@ -48,7 +53,7 @@ export const PersonalInfoForm = ({
         Back to Plans
       </Button>
       <Button type="submit" className="btn-primary flex-grow">
-        Continue to Address
+        Continue to Payment
       </Button>
     </div>
   </form>
