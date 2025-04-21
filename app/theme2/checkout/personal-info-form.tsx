@@ -22,7 +22,7 @@ export const PersonalInfoForm = ({
       nextStep();
     }}
   >
-    <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
+    <h2 className="text-xl font-semibold mb-6">Your Information</h2>
     <div className="space-y-4">
       {[
         { id: 'fullName', label: 'Full Name', Icon: User, type: 'text' },
@@ -53,7 +53,7 @@ export const PersonalInfoForm = ({
         Back to Plans
       </Button>
       <Button type="submit" className="btn-primary flex-grow">
-        Continue to Payment
+        Proceed to Payment
       </Button>
     </div>
   </form>

@@ -10,12 +10,14 @@ export const PaymentForm = ({
   prevStep,
   setErrorMessage,
   setIsComplete,
+  price
 }: {
   formData: any;
   clientSecret: string;
   prevStep: () => void;
   setErrorMessage: (msg: string | undefined) => void;
   setIsComplete: (complete: boolean) => void;
+  price: number;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -77,10 +79,10 @@ export const PaymentForm = ({
         </Label>
         {!isPaymentElementReady && (
           <div className="flex items-center justify-center p-6">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-violet-400">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-purple-400">
               <span className="sr-only">Loading payment form...</span>
             </div>
-            <span className="ml-2 text-gray-600>">Loading payment form...</span>
+            <span className="ml-2 text-gray-600">Loading payment form...</span>
           </div>
         )}
         <div className={`${isPaymentElementReady ? 'block' : 'hidden'}`}>
@@ -107,7 +109,7 @@ export const PaymentForm = ({
           className="btn-primary flex-grow"
           disabled={isProcessing || !stripe || !elements || !isPaymentElementReady}
         >
-          {isProcessing ? 'Processing...' : 'Complete Subscription'}
+          {isProcessing ? 'Processing...' : 'Place Order $' + price || undefined}
         </Button>
       </div>
     </form>

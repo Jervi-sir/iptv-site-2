@@ -7,37 +7,37 @@ const testimonials = [
     id: 1,
     name: 'Sarah Johnson',
     rating: 5,
-    text: `${ process.env.NEXT_PUBLIC_SITE_NAME } made me feel like I was front row at my favorite concert! The stream quality is unreal.`,
-    location: 'New York, USA'
+    text: `${process.env.NEXT_PUBLIC_SITE_NAME} transformed my learning journey! The variety of e-books and video courses is incredible, and I love accessing them on any device.`,
+    location: 'New York, USA',
   },
   {
     id: 2,
     name: 'Michael Chen',
     rating: 5,
-    text: `I’ve watched countless webinars and live shows on ${ process.env.NEXT_PUBLIC_SITE_NAME }. It’s the most reliable platform I’ve used!`,
-    location: 'Toronto, Canada'
+    text: `I’ve tried many learning platforms, but ${process.env.NEXT_PUBLIC_SITE_NAME} stands out for its reliability and quality. The audiobook selection is top-notch!`,
+    location: 'Toronto, Canada',
   },
   {
     id: 3,
     name: 'Priya Sharma',
     rating: 4,
-    text: 'Great value and excellent support. Had a minor issue with my stream, and they fixed it in minutes. Very happy!',
-    location: 'London, UK'
+    text: 'Amazing value for money and fantastic support. When I had a question, the team responded in minutes. Highly recommend!',
+    location: 'London, UK',
   },
   {
     id: 4,
     name: 'David Rodriguez',
     rating: 5,
-    text: 'The variety of live events is amazing. I watched a global music festival I couldn’t attend in person. Absolutely worth it!',
-    location: 'Barcelona, Spain'
+    text: 'The range of video courses is outstanding. I’ve learned new skills that I couldn’t access elsewhere. Worth every penny!',
+    location: 'Barcelona, Spain',
   },
   {
     id: 5,
     name: 'Emma Wilson',
     rating: 5,
-    text: `Using ${ process.env.NEXT_PUBLIC_SITE_NAME } for 6 months now, and it’s flawless. I love catching replays on my phone!`,
-    location: 'Sydney, Australia'
-  }
+    text: `I’ve been using ${process.env.NEXT_PUBLIC_SITE_NAME} for 6 months, and it’s flawless. The app makes learning on the go so easy.`,
+    location: 'Sydney, Australia',
+  },
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => {
@@ -93,6 +93,7 @@ const Testimonials = () => {
     setActiveSlide(prev => (prev <= 0 ? maxSlide : prev - 1));
   };
 
+  // Auto-advance slides
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
@@ -102,14 +103,14 @@ const Testimonials = () => {
   }, [activeSlide, maxSlide]);
 
   return (
-    <section id="testimonials" className="py-20 px-6 md:px-12">
+    <section id="testimonials" className="py-10 pb-20 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            What Our <span className="gradient-heading">Fans Say</span>
+            What Our <span className="gradient-heading">Customers Say</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Join thousands of viewers who have elevated their live event experience with { process.env.NEXT_PUBLIC_SITE_NAME }.
+            Join thousands of satisfied customers who have upgraded their entertainment experience with { process.env.NEXT_PUBLIC_SITE_NAME }.
           </p>
         </div>
         

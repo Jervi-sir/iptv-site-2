@@ -9,17 +9,17 @@ import { OrderSummary } from './order-summary';
 import { Theme2Layout } from '../theme2-layout';
 import { SuccessMessage } from './success-message';
 import { pricingPlans } from '@/db/offers';
-import { PaymentForm } from './payment-form';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { PaymentForm } from './payment-form';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 // Map plan titles to details
 const planDetails = pricingPlans.reduce(
   (acc, plan) => {
-    const price = parseFloat(plan.price.replace(/[^0-9.]/g, '')); // e.g., 15.99
+    const price = parseFloat(plan.price.replace(/[^0-9.]/g, '')); // e.g., 12.99
     acc[plan.title.toLowerCase().replace(' ', '-')] = {
       name: plan.title,
       price,
@@ -184,10 +184,10 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
           ) : (
             <>
               <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold mb-2">Complete Your Subscription</h1>
+                <h1 className="text-3xl font-bold mb-2">Start Your Learning Journey</h1>
                 {selectedPlan && (
                   <p className="text-gray-600">
-                    Subscribing to {plan.name}
+                    Subscribing to {plan.name} for unlimited learning
                   </p>
                 )}
               </div>
@@ -197,7 +197,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                   <div key={num} className="flex w-full items-center">
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center z-10 ${
-                        step >= num ? 'bg-violet-400 text-white' : 'bg-gray-200 text-gray-500'
+                        step >= num ? 'bg-purple-400 text-white' : 'bg-gray-200 text-gray-500'
                       }`}
                     >
                       {num}
@@ -205,7 +205,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                     {num < 3 && (
                       <div
                         className={`h-1 flex-grow ${
-                          step > num ? 'bg-violet-400' : 'bg-gray-200'
+                          step > num ? 'bg-purple-400' : 'bg-gray-200'
                         }`}
                       />
                     )}
@@ -219,14 +219,14 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                     <CardContent className="p-6">
                       {step === 1 && (
                         <div>
-                          <h2 className="text-xl font-semibold mb-6">Select Your Plan</h2>
+                          <h2 className="text-xl font-semibold mb-6">Choose Your Learning Plan</h2>
                           <div className="flex flex-col gap-4">
                             {pricingPlans.map((plan) => (
                               <div
                                 key={plan.priceId}
                                 className={`rounded-xl flex overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${
                                   plan.isPopular
-                                    ? 'border-2 border-violet-400 relative'
+                                    ? 'border-2 border-purple-400 relative'
                                     : 'bg-white shadow-md'
                                 } ${
                                   selectedPlan === plan.title.toLowerCase().replace(' ', '-')
@@ -235,7 +235,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                                 }`}
                               >
                                 {plan.isPopular && (
-                                  <div className="absolute top-0 right-0 bg-violet-400 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                  <div className="absolute top-0 right-0 bg-purple-400 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                                     BEST VALUE
                                   </div>
                                 )}
@@ -309,12 +309,13 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                             prevStep={prevStep}
                             setErrorMessage={setErrorMessage}
                             setIsComplete={setIsComplete}
+                            price={price}
                           />
                         </Elements>
                       )}
                       {step === 3 && !clientSecret && (
                         <div className="flex items-center justify-center p-6">
-                          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-violet-400">
+                          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-purple-400">
                             <span className="sr-only">Loading...</span>
                           </div>
                         </div>

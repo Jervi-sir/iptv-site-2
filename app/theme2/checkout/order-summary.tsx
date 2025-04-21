@@ -11,7 +11,7 @@ export const OrderSummary = ({
 }) => (
   <Card className="shadow-md sticky top-4">
     <CardContent className="p-6">
-      <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+      <h3 className="text-lg font-semibold mb-4">Learning Plan Summary</h3>
       <div className="space-y-3 mb-4">
         {[
           { label: 'Plan', value: plan.name },

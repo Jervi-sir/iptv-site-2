@@ -1,0 +1,1798 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+
+Additional Info:
+----------------
+
+================================================================
+Directory Structure
+================================================================
+checkout/
+  checkout-layout.tsx
+  order-summary.tsx
+  payment-form.tsx
+  personal-info-form.tsx
+  success-message.tsx
+animated-section.tsx
+footer.tsx
+free-trial.tsx
+header.tsx
+hero.tsx
+index.tsx
+live-channels.tsx
+marquee.tsx
+pricing copy.tsx
+pricing.tsx
+providers.tsx
+testimonials.tsx
+theme2-layout.tsx
+why-choose-us.tsx
+
+================================================================
+Files
+================================================================
+
+================
+File: checkout/checkout-layout.tsx
+================
+'use client';
+
+import { useState, useEffect, Suspense } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import { PersonalInfoForm } from './personal-info-form';
+import { Card, CardContent } from '@/components/ui/card';
+import { Elements } from '@stripe/react-stripe-js';
+import { OrderSummary } from './order-summary';
+import { Theme2Layout } from '../theme2-layout';
+import { SuccessMessage } from './success-message';
+import { pricingPlans } from '@/db/offers';
+import { PaymentForm } from './payment-form';
+import { Button } from '@/components/ui/button';
+import { Check } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+
+// Map plan titles to details
+const planDetails = pricingPlans.reduce(
+  (acc, plan) => {
+    const price = parseFloat(plan.price.replace(/[^0-9.]/g, '')); // e.g., 15.99
+    acc[plan.title.toLowerCase().replace(' ', '-')] = {
+      name: plan.title,
+      price,
+      savings: plan.savings || '',
+    };
+    return acc;
+  },
+  {} as Record<string, { name: string; price: number; savings: string }>
+);
+
+// Map plan IDs for URL params (e.g., "1-month" -> "1-month")
+const planIdMap: Record<string, string> = {
+  '1-month': '1-month',
+  '3-months': '3-months',
+  '6-months': '6-months',
+  '12-months': '12-months',
+};
+
+const convertToSubcurrency = (amount: number) => Math.round(amount * 100);
+
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  address?: string;
+  city?: string;
+  zipCode?: string;
+  country?: string;
+  location?: string;
+}
+
+export const CheckoutLayout = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CheckoutContentWrapper />
+    </Suspense>
+  );
+};
+
+const CheckoutContentWrapper = () => {
+  const searchParams = useSearchParams();
+  const planId = searchParams.get('plan')?.toLowerCase();
+
+  return <CheckoutContent planId={planId} />;
+};
+
+interface CheckoutContentProps {
+  planId?: string | null;
+}
+
+const CheckoutContent = ({ planId }: CheckoutContentProps) => {
+  const [step, setStep] = useState(1);
+  const [clientSecret, setClientSecret] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [isComplete, setIsComplete] = useState(false);
+  // Initialize with default plan "1-month"
+  const [selectedPlan, setSelectedPlan] = useState<string>('1-month');
+
+  useEffect(() => {
+    if (planId && planIdMap[planId]) {
+      console.log('Overriding with query param:', { planId });
+      setSelectedPlan(planId);
+      setStep(2); // Skip to step 2 if planId is provided
+    } else {
+      console.log('Using default plan: 1-month');
+      setStep(1);
+    }
+  }, [planId]);
+
+  const plan = selectedPlan
+    ? planDetails[planIdMap[selectedPlan] || selectedPlan] || planDetails['1-month']
+    : planDetails['1-month'];
+  const price = plan.price;
+
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    zipCode: '',
+    country: '',
+    location: '',
+  });
+
+  const [formErrors, setFormErrors] = useState<Partial<FormData>>({});
+
+  useEffect(() => {
+    if (step === 3 && selectedPlan && !clientSecret) {
+      fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: convertToSubcurrency(price),
+          currency: 'usd',
+          metadata: { planId: selectedPlan, price: price.toFixed(2) },
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          return res.json();
+        })
+        .then((data) => {
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret);
+          } else {
+            setErrorMessage('Invalid response from payment intent API.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching clientSecret:', error);
+          setErrorMessage('Failed to initialize payment. Please try again.');
+        });
+    }
+  }, [price, selectedPlan, step, clientSecret]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setFormErrors({ ...formErrors, [name]: '' });
+  };
+
+  const validateForm = (fields: (keyof FormData)[]) => {
+    const errors: Partial<FormData> = {};
+    fields.forEach((field) => {
+      if (!formData[field]) errors[field] = `${field.replace(/([A-Z])/g, ' $1')} is required`;
+      else if (field === 'email' && !/\S+@\S+\.\S+/.test(formData.email))
+        errors.email = 'Invalid email address';
+      else if (field === 'phone' && !/^\+?\d{10,15}$/.test(formData.phone.replace(/\D/g, '')))
+        errors.phone = 'Invalid phone number';
+    });
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const nextStep = () => {
+    const stepFields: (keyof FormData)[][] = [
+      [], // Step 1: Plan selection
+      ['fullName', 'email', 'phone'], // Step 2: Personal info
+      [], // Step 3: Payment (handled by Stripe)
+    ];
+    if (step === 1 && selectedPlan) {
+      setStep(2);
+      window.scrollTo(0, 0);
+    } else if (step === 2 && validateForm(stepFields[1])) {
+      setStep(3);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+    window.scrollTo(0, 0);
+  };
+
+  return (
+    <Theme2Layout>
+      <main className="flex-grow pt-28 pb-16 px-6 md:px-12 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          {isComplete ? (
+            <SuccessMessage plan={plan} price={price} duration={plan.name.toLowerCase()} />
+          ) : (
+            <>
+              <div className="text-center mb-8">
+                <h1 className="text-3xl font-bold mb-2">Complete Your Subscription</h1>
+                {selectedPlan && (
+                  <p className="text-gray-600">
+                    Subscribing to {plan.name}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex mb-8">
+                {[1, 2, 3].map((num) => (
+                  <div key={num} className="flex w-full items-center">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center z-10 ${
+                        step >= num ? 'bg-violet-400 text-white' : 'bg-gray-200 text-gray-500'
+                      }`}
+                    >
+                      {num}
+                    </div>
+                    {num < 3 && (
+                      <div
+                        className={`h-1 flex-grow ${
+                          step > num ? 'bg-violet-400' : 'bg-gray-200'
+                        }`}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="md:col-span-2">
+                  <Card className="shadow-md">
+                    <CardContent className="p-6">
+                      {step === 1 && (
+                        <div>
+                          <h2 className="text-xl font-semibold mb-6">Select Your Plan</h2>
+                          <div className="flex flex-col gap-4">
+                            {pricingPlans.map((plan) => (
+                              <div
+                                key={plan.priceId}
+                                className={`rounded-xl flex overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${
+                                  plan.isPopular
+                                    ? 'border-2 border-violet-400 relative'
+                                    : 'bg-white shadow-md'
+                                } ${
+                                  selectedPlan === plan.title.toLowerCase().replace(' ', '-')
+                                    ? 'border-2 border-green-500 bg-green-100'
+                                    : ''
+                                }`}
+                              >
+                                {plan.isPopular && (
+                                  <div className="absolute top-0 right-0 bg-violet-400 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                    BEST VALUE
+                                  </div>
+                                )}
+                                <div className="flex flex-row flex-1 p-6 items-center">
+                                  <div className="flex-1 pr-4">
+                                    <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+                                    <div className="mb-2">
+                                      <span className="text-2xl font-bold">{plan.price}</span>
+                                      <span className="text-gray-500 text-xs">/{plan.title.toLowerCase()}</span>
+                                    </div>
+                                    {plan.savings && (
+                                      <div className="text-green-500 font-semibold text-sm mb-2">
+                                        {plan.savings}
+                                      </div>
+                                    )}
+                                    <p className="text-gray-600 text-sm">{plan.description}</p>
+                                  </div>
+                                  <div className="flex-1 flex flex-col justify-between">
+                                    <ul className="space-y-2 mb-4">
+                                      {plan.features.map((feature, idx) => (
+                                        <li key={idx} className="flex items-start">
+                                          <Check size={16} className="text-green-500 mr-2 mt-0.5 shrink-0" />
+                                          <span className="text-gray-700 text-sm">{feature}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                    <Button
+                                      className={`w-full ${
+                                        plan.isPopular ? 'btn-primary' : 'btn-secondary'
+                                      } ${
+                                        selectedPlan === plan.title.toLowerCase().replace(' ', '-')
+                                          ? 'bg-green-500 hover:bg-green-600'
+                                          : ''
+                                      }`}
+                                      onClick={() => {
+                                        setSelectedPlan(plan.title.toLowerCase().replace(' ', '-'));
+                                        nextStep();
+                                      }}
+                                    >
+                                      {selectedPlan === plan.title.toLowerCase().replace(' ', '-')
+                                        ? `Continue with ${plan.title}`
+                                        : `Choose ${plan.title}`}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {step === 2 && (
+                        <PersonalInfoForm
+                          formData={formData as any}
+                          formErrors={formErrors as any}
+                          handleChange={handleChange}
+                          nextStep={nextStep}
+                          prevStep={prevStep}
+                        />
+                      )}
+                      {step === 3 && clientSecret && (
+                        <Elements
+                          stripe={stripePromise}
+                          options={{
+                            clientSecret,
+                            appearance: { theme: 'stripe', variables: { colorPrimary: '#6b21a8' } },
+                          }}
+                        >
+                          <PaymentForm
+                            formData={formData}
+                            clientSecret={clientSecret}
+                            prevStep={prevStep}
+                            setErrorMessage={setErrorMessage}
+                            setIsComplete={setIsComplete}
+                          />
+                        </Elements>
+                      )}
+                      {step === 3 && !clientSecret && (
+                        <div className="flex items-center justify-center p-6">
+                          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-violet-400">
+                            <span className="sr-only">Loading...</span>
+                          </div>
+                        </div>
+                      )}
+                      {errorMessage && step === 3 && (
+                        <div className="text-red-500 text-sm mt-4">{errorMessage}</div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="">
+                  {selectedPlan && <OrderSummary plan={plan} price={price} duration={plan.name.toLowerCase()} />}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </main>
+    </Theme2Layout>
+  );
+};
+
+================
+File: checkout/order-summary.tsx
+================
+import { Card, CardContent } from '@/components/ui/card';
+
+export const OrderSummary = ({
+  plan,
+  price,
+  duration,
+}: {
+  plan: { name: string; savings?: string };
+  price: number;
+  duration: string;
+}) => (
+  <Card className="shadow-md sticky top-4">
+    <CardContent className="p-6">
+      <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+      <div className="space-y-3 mb-4">
+        {[
+          { label: 'Plan', value: plan.name },
+          { label: 'Duration', value: duration.charAt(0).toUpperCase() + duration.slice(1) },
+          {
+            label: 'Total',
+            value: (
+              <>
+                ${price.toFixed(2)}
+                <span className="text-sm font-normal text-gray-500">/{duration}</span>
+              </>
+            ),
+          },
+          ...(plan.savings ? [{ label: 'Savings', value: plan.savings }] : []),
+        ].map(({ label, value }) => (
+          <div key={label} className={`flex justify-between ${label === 'Total' ? 'border-t pt-3 mt-3' : ''}`}>
+            <span className="text-gray-600">{label}</span>
+            <span className={label === 'Total' ? 'text-lg font-bold' : 'font-medium'}>{value}</span>
+          </div>
+        ))}
+      </div>
+      <div className="text-sm text-gray-500 mt-6">
+        By completing your purchase, you agree to our Terms of Service and Privacy Policy.
+      </div>
+    </CardContent>
+  </Card>
+);
+
+================
+File: checkout/payment-form.tsx
+================
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { ArrowLeft, CreditCard } from 'lucide-react';
+import { useState } from 'react';
+
+export const PaymentForm = ({
+  formData,
+  clientSecret,
+  prevStep,
+  setErrorMessage,
+  setIsComplete,
+}: {
+  formData: any;
+  clientSecret: string;
+  prevStep: () => void;
+  setErrorMessage: (msg: string | undefined) => void;
+  setIsComplete: (complete: boolean) => void;
+}) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isPaymentElementReady, setIsPaymentElementReady] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsProcessing(true);
+
+    if (!stripe || !elements || !clientSecret) {
+      setErrorMessage('Payment system not ready.');
+      setIsProcessing(false);
+      return;
+    }
+
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setErrorMessage(submitError.message);
+      setIsProcessing(false);
+      return;
+    }
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      clientSecret,
+      confirmParams: {
+        return_url: `${window.location.origin}/success`,
+        payment_method_data: {
+          billing_details: {
+            name: formData.fullName,
+            email: formData.email,
+            phone: formData.phone,
+            address: {
+              line1: formData.address,
+              city: formData.city,
+              postal_code: formData.zipCode,
+              country: formData.country,
+            },
+          },
+        },
+      },
+    });
+
+    if (error) {
+      setErrorMessage(error.message);
+      setIsProcessing(false);
+    } else {
+      setIsComplete(true);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2 className="text-xl font-semibold mb-6">Payment Information</h2>
+      <div className="space-y-4">
+        <Label className="flex items-center">
+          <CreditCard size={16} className="mr-1" /> Payment Details
+        </Label>
+        {!isPaymentElementReady && (
+          <div className="flex items-center justify-center p-6">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-violet-400">
+              <span className="sr-only">Loading payment form...</span>
+            </div>
+            <span className="ml-2 text-gray-600>">Loading payment form...</span>
+          </div>
+        )}
+        <div className={`${isPaymentElementReady ? 'block' : 'hidden'}`}>
+          <PaymentElement
+            onReady={() => {
+              setIsPaymentElementReady(true);
+            }}
+            options={{
+              defaultValues: {
+                billingDetails: {
+                  email: formData.email || '',
+                },
+              },
+            }}
+          />
+        </div>
+      </div>
+      <div className="flex gap-4 mt-8">
+        <Button type="button" variant="outline" onClick={prevStep}>
+          <ArrowLeft size={16} className="mr-1" /> Back
+        </Button>
+        <Button
+          type="submit"
+          className="btn-primary flex-grow"
+          disabled={isProcessing || !stripe || !elements || !isPaymentElementReady}
+        >
+          {isProcessing ? 'Processing...' : 'Complete Subscription'}
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+================
+File: checkout/personal-info-form.tsx
+================
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Mail, Phone, User } from 'lucide-react';
+
+export const PersonalInfoForm = ({
+  formData,
+  formErrors,
+  handleChange,
+  nextStep,
+  prevStep,
+}: {
+  formData: FormData;
+  formErrors: Partial<FormData>;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  nextStep: () => void;
+  prevStep: () => void;
+}) => (
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      nextStep();
+    }}
+  >
+    <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
+    <div className="space-y-4">
+      {[
+        { id: 'fullName', label: 'Full Name', Icon: User, type: 'text' },
+        { id: 'email', label: 'Email Address', Icon: Mail, type: 'email' },
+        { id: 'phone', label: 'Phone Number', Icon: Phone, type: 'tel' },
+      ].map(({ id, label, Icon, type }) => (
+        <div key={id} className="space-y-2">
+          <Label htmlFor={id} className="flex items-center">
+            <Icon size={16} className="mr-1" /> {label}
+          </Label>
+          <Input
+            id={id}
+            name={id}
+            type={type}
+            value={formData[id as keyof FormData] as any}
+            onChange={handleChange}
+            required
+            className="bg-transparent text-black focus:bg-transparent"
+          />
+          {formErrors[id as keyof FormData] && (
+            <div className="text-red-500 text-sm">{formErrors[id as keyof FormData] as any}</div>
+          )}
+        </div>
+      ))}
+    </div>
+    <div className="flex gap-4 mt-8">
+      <Button type="button" variant="outline" onClick={prevStep}>
+        Back to Plans
+      </Button>
+      <Button type="submit" className="btn-primary flex-grow">
+        Continue to Payment
+      </Button>
+    </div>
+  </form>
+);
+
+================
+File: checkout/success-message.tsx
+================
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle } from 'lucide-react';
+
+export const SuccessMessage = ({
+  plan,
+  price,
+  duration,
+}: {
+  plan: { name: string };
+  price: number;
+  duration: string;
+}) => (
+  <Card className="shadow-lg max-w-2xl mx-auto animate-scale-in">
+    <CardContent className="p-8 text-center">
+      <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+        <CheckCircle className="text-green-600" size={36} />
+      </div>
+      <h1 className="text-2xl font-bold mb-2">Subscription Successful!</h1>
+      <p className="text-gray-600 mb-8">
+        Thank you for subscribing. Your {plan.name} plan is now active.
+      </p>
+      <div className="space-y-4 mb-8">
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h3 className="font-semibold mb-2">Subscription Details</h3>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="text-gray-500 text-left">Plan:</div>
+            <div className="text-right font-medium">{plan.name}</div>
+            <div className="text-gray-500 text-left">Duration:</div>
+            <div className="text-right font-medium capitalize">{duration}</div>
+            <div className="text-gray-500 text-left">Price:</div>
+            <div className="text-right font-medium">
+              ${price.toFixed(2)}/{duration}
+            </div>
+          </div>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h3 className="font-semibold mb-2">What's Next?</h3>
+          <p className="text-sm text-gray-600 text-left">
+            Check your email for login details and setup instructions.
+          </p>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+================
+File: animated-section.tsx
+================
+'use client'
+
+import { ReactNode, useRef } from 'react';
+import { motion, useInView, Variants } from 'motion/react';
+import { AnimatedGroup, PresetType } from '@/components/ui/animated-group';
+
+interface AnimatedSectionProps {
+  children: ReactNode;
+  preset?: PresetType;
+  className?: string;
+  duration?: number; // New prop for animation duration
+  variants?: {
+    container?: Variants;
+    item?: Variants;
+  };
+}
+
+export const AnimatedSection = ({
+  children,
+  preset = 'blur-slide',
+  className,
+  duration = 3, // Default to 3 seconds
+  variants,
+}: AnimatedSectionProps) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '0px 0px -100px 0px' });
+
+  // Default variants with dynamic duration
+  const defaultVariants = {
+    container: {
+      hidden: { opacity: 0 },
+      visible: {
+        opacity: 1,
+        transition: {
+          duration: duration * 0.3, // Container fades faster (30% of item duration)
+          staggerChildren: 0.1,
+          delayChildren: 0.3,
+        },
+      },
+    },
+    item: {
+      hidden: { opacity: 0, filter: 'blur(12px)', y: 20 },
+      visible: {
+        opacity: 1,
+        filter: 'blur(0px)',
+        y: 0,
+        transition: {
+          type: 'spring',
+          bounce: 0.3,
+          duration, // Use the passed duration
+        },
+      },
+    },
+  };
+
+  return (
+    <motion.section
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      variants={defaultVariants.container}
+      className={className}
+    >
+      <AnimatedGroup
+        preset={preset}
+        variants={variants || defaultVariants}
+        as="div"
+        className="w-full"
+      >
+        {children}
+      </AnimatedGroup>
+    </motion.section>
+  );
+};
+
+================
+File: footer.tsx
+================
+import { contacts } from '@/db/contacts';
+import { ShoppingBagIcon, PhoneIcon } from 'lucide-react';
+import Link from 'next/link';
+
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="bg-iptv-deep-purple text-white pt-16 pb-8 px-6 md:px-12 bg-violet-400">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-center items-center">
+          <div className='flex flex-col justify-center items-center gap-4'>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-iptv-purple to-iptv-blue bg-clip-text text-white">
+              {process.env.NEXT_PUBLIC_SITE_NAME}
+            </h3>
+            <p className="text-white ">
+              Your premium IPTV solution for unlimited entertainment on any device, anywhere.
+            </p>
+            <div className="flex flex-col gap-4 items-center md:flex-row">
+              {[
+                { icon: <PhoneIcon size={18} /> , name: 'Contact', url: contacts.whatsapp,  },
+                { icon: <ShoppingBagIcon size={18} /> , name: 'Subscribe to ' + process.env.NEXT_PUBLIC_SITE_NAME, url: '#pricing',  },
+              ].map((item, index) => (
+                <Link key={index} href={item.url} className="bg-violet-500 hover:bg-violet-600 text-white font-bold py-2 px-4 border-b-4 border-violet-600 hover:border-violet-500 rounded flex flex-row items-center cursor-pointer gap-2 text-sm transition">
+                  {item.icon} {item.name}
+                </Link>
+              ))}
+            </div>
+            <ul className="space-y-3 flex flex-col justify-between items-center">
+              {/* <li className="flex items-center">
+                <Mail size={18} className="mr-2 text-iptv-purple" />
+                <a href="mailto:support@streamsizzle.com" className="text-gray-300 hover:text-white transition-colors">
+                  support@streamsizzle.com
+                </a>
+              </li>
+              <li className="flex items-center">
+                <Phone size={18} className="mr-2 text-iptv-purple" />
+                <a href="tel:+1234567890" className="text-gray-300 hover:text-white transition-colors">
+                  +1 (234) 567-890
+                </a>
+              </li> */}
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-white mt-12 pt-8 text-center text-gray-400 text-sm">
+          <p className='text-white'>
+            &copy; {currentYear} {process.env.NEXT_PUBLIC_SITE_NAME}. All rights reserved.
+          </p>
+
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+
+================
+File: free-trial.tsx
+================
+'use client';
+
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useSpring, animated } from '@react-spring/web';
+import { contacts } from '@/db/contacts';
+
+export const FreeTrialSection = () => {
+  // React Spring animation for button hover effect
+  const [buttonProps, buttonApi] = useSpring(() => ({
+    from: { scale: 1 },
+    config: { tension: 200, friction: 10 },
+  }));
+
+  // React Spring animation for border-to-background effect
+  const [borderProps, borderApi] = useSpring(() => ({
+    from: { height: '2px', bottom: '0', background: '#6b21a8' },
+    config: { tension: 100, friction: 10 },
+  }));
+
+  const handleButtonHover = () => {
+    buttonApi.start({ scale: 1.05 });
+  };
+
+  const handleButtonUnhover = () => {
+    buttonApi.start({ scale: 1 });
+  };
+
+  const handleTextHover = () => {
+    borderApi.start({
+      height: '42px',
+      bottom: '0',
+      background: 'rgba(107, 33, 168, 0.5)', // Light violet background
+    });
+  };
+
+  const handleTextUnhover = () => {
+    borderApi.start({
+      height: '2px',
+      bottom: '0',
+      background: '#6b21a8', // Violet border
+    });
+  };
+
+  return (
+    <section id="free-trial" className="py-20 px-6 md:px-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          Unlock Your{' '}
+          <span
+            className="relative inline-block cursor-pointer"
+            onMouseEnter={handleTextHover}
+            onMouseLeave={handleTextUnhover}
+          >
+            <span className='relative z-10'>Free 6-Hour Pass🚀</span>
+            <animated.div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                zIndex: 1,
+                borderRadius: '0.25rem',
+                ...borderProps,
+              }}
+            
+            />
+          </span>{' '}
+          <span className="gradient-heading"> Entertainment Journey</span>
+        </h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+          Experience +30,000 channels, +141,000 movies, and +26,000 series with no commitment. Start your streaming adventure now!
+        </p>
+        <Link href={contacts.whatsapp}>
+          {/* @ts-ignore */}
+          <animated.div
+            style={buttonProps}
+            onMouseEnter={handleButtonHover}
+            onMouseLeave={handleButtonUnhover}
+          >
+            <Button
+              className="btn-primary text-lg px-8 py-6 rounded-full"
+              aria-label="Start your free 6-hour trial"
+            >
+              Start Free Trial
+            </Button>
+          </animated.div>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+================
+File: header.tsx
+================
+'use client'
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <header className="w-full py-4 px-6 md:px-12 bg-white/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 shadow-sm">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <Link href="/" className="text-2xl font-bold gradient-heading">{ process.env.NEXT_PUBLIC_SITE_NAME }</Link>
+        
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-8 items-center">
+          <Link href="/" className="font-medium text-gray-700 hover:text-iptv-purple transition-colors">Home</Link>
+          <Link href="/#pricing" className="font-medium text-gray-700 hover:text-iptv-purple transition-colors">Pricing</Link>
+          <Link href="/#testimonials" className="font-medium text-gray-700 hover:text-iptv-purple transition-colors">Testimonials</Link>
+          <Link href={`#pricing`}>
+            <Button className="btn-primary">Free Trial</Button>
+          </Link>
+        </nav>
+        
+        {/* Mobile Menu Button */}
+        <button className="md:hidden text-gray-700" onClick={toggleMenu}>
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+      
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-16 bg-white z-40 animate-fade-in">
+          <nav className="flex flex-col items-center pt-10 space-y-6">
+            <Link 
+              href="/" 
+              className="text-xl font-medium text-gray-700 hover:text-iptv-purple transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link 
+              href="/#pricing" 
+              className="text-xl font-medium text-gray-700 hover:text-iptv-purple transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Pricing
+            </Link>
+            <Link 
+              href="/#testimonials" 
+              className="text-xl font-medium text-gray-700 hover:text-iptv-purple transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Testimonials
+            </Link>
+            <Link href={`#pricing`} onClick={() => setIsMenuOpen(false)}>
+              <Button className="btn-primary text-lg px-8 py-4">Free Trial</Button>
+            </Link>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Header;
+
+================
+File: hero.tsx
+================
+'use client'
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Tv, Wifi, Globe, Zap, MessageCircleIcon, MessageCircleCodeIcon, MessageCircleDashed } from 'lucide-react';
+import Link from 'next/link';
+
+const Hero = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Add animation delay
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <section className="relative pt-28 pb-20 md:pt-36 md:pb-24 px-6 overflow-hidden max-w-7xl mx-auto">
+      {/* Background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+        <div className="absolute top-0 right-0 bg-iptv-purple/10 w-96 h-96 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 bg-iptv-blue/10 w-96 h-96 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className={`space-y-4 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
+              Upgrade Your, <span className="gradient-heading">IPTV</span> Experience to the Latest, <span className="gradient-heading">High-End</span> Standards!
+            </h1>
+
+            <p className="text-md md:text-md text-gray-700">
+            +30,000 TV channels, including top-notch content from Netflix, Hulu, Apple TV+, Amazon Prime, Disney+, and HBO Max—all available on {process.env.NEXT_PUBLIC_SITE_NAME}
+            </p>
+
+            <div className="flex flex-wrap gap-4 pt-0">
+              <Link href={`${process.env.NEXT_PUBLIC_REDIRECT_TO}/checkout`}>
+                <Button className="btn-primary text-lg cursor-pointer"> <MessageCircleDashed /> WhatsApp</Button>
+              </Link>
+              <Link href="/#pricing">
+                <Button variant="outline" className="text-lg cursor-pointer hover:bg-purple-200 hover:text-purple-800 hover:scale-105">View Plans</Button>
+              </Link>
+            </div>
+
+            <div className="flex flex-wrap gap-6 pt-4 text-sm">
+              <div className="flex items-center gap-2">
+                <Tv size={20} className="text-iptv-purple" />
+                <span>10,000+ Channels</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Wifi size={20} className="text-iptv-purple" />
+                <span>HD Quality</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe size={20} className="text-iptv-purple" />
+                <span>Worldwide Access</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap size={20} className="text-iptv-purple" />
+                <span>24/7 Support</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
+            <div className="card-highlight p-4 md:p-4 border-violet-400 border-2 overflow-hidden">
+              <div className="relative rounded-lg overflow-hidden shadow-2xl aspect-video">
+                <div className="absolute inset-0 bg-gradient-to-br from-iptv-purple/90 to-iptv-blue/90 flex items-center justify-center">
+                  <img src='/feature/4.jpg' />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
+
+================
+File: index.tsx
+================
+'use client';
+
+import React from 'react';
+import Hero from './hero';
+import Testimonials from './testimonials';
+import PricingPlans from './pricing';
+import { Theme2Layout } from './theme2-layout';
+import { MarqueeSection } from './marquee';
+import { ProvidersSection } from './providers';
+import { FreeTrialSection } from './free-trial';
+import { LiveChannelsSection } from './live-channels';
+import { WhyChooseUsSection } from './why-choose-us';
+import { AnimatedSection } from './animated-section';
+
+export const Theme2 = () => {
+  return (
+    <Theme2Layout>
+      {/* Hero (1.5s animation) */}
+      <AnimatedSection preset="blur-slide" duration={1}>
+        <Hero />
+      </AnimatedSection>
+      {/* Channels Marquee (3s animation) */}
+      <AnimatedSection preset="blur-slide" duration={3}>
+        <MarqueeSection />
+      </AnimatedSection>
+      {/* Channels 2 (3s animation) */}
+      <AnimatedSection preset="blur-slide" duration={3}>
+        <LiveChannelsSection />
+      </AnimatedSection>
+      {/* Enjoy with Us (3s animation) */}
+      <AnimatedSection preset="blur-slide" duration={3}>
+        <ProvidersSection />
+      </AnimatedSection>
+      {/* Why Us (3s animation) */}
+      <AnimatedSection preset="blur-slide" duration={3}>
+        <WhyChooseUsSection />
+      </AnimatedSection>
+      {/* Free Trial (3s animation) */}
+      <AnimatedSection preset="blur-slide" duration={3}>
+        <FreeTrialSection />
+      </AnimatedSection>
+      {/* Pricing (3s animation) */}
+      <AnimatedSection preset="blur-slide" duration={3}>
+        <PricingPlans />
+      </AnimatedSection>
+      {/* Testimonials (3s animation) */}
+      <AnimatedSection preset="blur-slide" duration={3}>
+        <Testimonials />
+      </AnimatedSection>
+    </Theme2Layout>
+  );
+};
+
+================
+File: live-channels.tsx
+================
+'use client';
+
+import { useSpring, animated } from '@react-spring/web';
+
+export const LiveChannelsSection = () => {
+  const images = [
+    { name: 'BBC', url: './channels-2/bbc.webp' },
+    { name: 'Bein Sports', url: './channels-2/bein-sports.webp' },
+    { name: 'Canal+ Premium', url: './channels-2/canal-premium.webp' },
+    { name: 'CNBC', url: './channels-2/cnbc.webp' },
+    { name: 'Fox', url: './channels-2/fox.webp' },
+    { name: 'Sky Sports', url: './channels-2/sky-sports.webp' },
+  ];
+
+  return (
+    <section id="live-channels" className="py-14 pb-20 px-6 md:px-12 bg-gray-50">
+      <div className="max-w-2xl mx-auto text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-8">
+          More than <span className="gradient-heading">30,000 LIVE TV Channels</span>
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {images.map((item, index) => {
+            // React Spring animation for hover effect
+            const [springProps, api] = useSpring(() => ({
+              opacity: 0.8,
+              scale: 1,
+              config: { tension: 200, friction: 20 },
+            }));
+
+            const handleHover = () => {
+              api.start({ opacity: 1, scale: 1.05 });
+            };
+
+            const handleUnhover = () => {
+              api.start({ opacity: 0.8, scale: 1 });
+            };
+
+            return (
+              <>
+                {/* @ts-ignore */}
+                <animated.div
+                  key={index}
+                  style={springProps}
+                  onMouseEnter={handleHover}
+                  onMouseLeave={handleUnhover}
+                  className="w-32 shadow-md bg-white p-4 rounded-lg mx-auto"
+                >
+                  <img
+                    src={item.url}
+                    alt={item.name}
+                    className="h-20 object-contain"
+                  />
+                </animated.div>
+              </>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+================
+File: marquee.tsx
+================
+'use client'
+import React, { useEffect, useRef } from 'react';
+import Marquee from "react-fast-marquee";
+
+export const MarqueeSection = () => {
+
+  return (
+    <div
+      className="w-full pb-10 inline-flex flex-nowrap overflow-hidden [mask-image:linear-gradient(to_right,transparent_0,black_128px,black_calc(100%-128px),transparent_100%)]"
+    >
+      <Marquee autoFill direction='right'>
+        {[
+          { name: 'afl', url: './channels/afl.webp' },
+          { name: 'caf', url: './channels/caf.webp' },
+          { name: 'cricket', url: './channels/cricket.webp' },
+          { name: 'f1', url: './channels/f1.webp' },
+          { name: 'fifa', url: './channels/fifa.webp' },
+          { name: 'nfl', url: './channels/nfl.webp' },
+          { name: 'nhl', url: './channels/nhl.webp' },
+          { name: 'nrl', url: './channels/nrl.webp' },
+          { name: 'premiere', url: './channels/premiere.webp' },
+          { name: 'uefa', url: './channels/uefa.webp' },
+          { name: 'ufc', url: './channels/ufc.webp' },
+          { name: 'world', url: './channels/world.webp' },
+        ].map((item, index) => (
+          <div key={index}>
+            <img src={item.url} alt={item.name} className='h-20' />
+          </div>
+        ))}
+      </Marquee>
+    </div>
+  );
+};
+
+================
+File: pricing copy.tsx
+================
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Check } from 'lucide-react';
+import Link from 'next/link';
+import { pricingPlans } from '@/db/offers';
+
+const PricingPlans = ({ doRedirect = false }: { doRedirect?: boolean }) => {
+  return (
+    <section id="pricing" className="py-20 px-6 md:px-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            No Limits, Your Price...{' '}
+            <span className="gradient-heading">Unleash Boundless Streaming Freedom!</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Select a plan tailored to your streaming needs with our massive content library.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {pricingPlans.map((plan) => (
+            <div
+              key={plan.priceId}
+              className={`rounded-xl flex flex-col overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${
+                plan.isPopular
+                  ? 'border-2 border-violet-400 relative'
+                  : 'bg-white shadow-md'
+              }`}
+            >
+              {plan.isPopular && (
+                <div className="absolute top-0 right-0 bg-violet-400 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                  BEST VALUE
+                </div>
+              )}
+              <div className="flex flex-col flex-1 p-6">
+                <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">{plan.price}</span>
+                  <span className="text-gray-500 text-sm">/{plan.title.toLowerCase()}</span>
+                </div>
+                {plan.savings && (
+                  <div className="mb-4 text-green-500 font-semibold text-sm">
+                    {plan.savings}
+                  </div>
+                )}
+                <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
+                <ul className="space-y-3 mb-6 flex-1">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <Check size={18} className="text-green-500 mr-2 mt-0.5 shrink-0" />
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={doRedirect ? `${process.env.NEXT_PUBLIC_REDIRECT_TO}/checkout?plan=${plan.title.toLowerCase().replace(' ', '-')}` : `${plan.title.toLowerCase().replace(' ', '-')}`}
+                  className="block w-full mt-auto"
+                >
+                  <Button
+                    className={`w-full ${
+                      plan.isPopular ? 'btn-primary' : 'btn-secondary'
+                    }`}
+                  >
+                    Choose {plan.title}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-12 text-gray-500 text-sm">
+          All plans include a 7-day money-back guarantee.
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default PricingPlans;
+
+================
+File: pricing.tsx
+================
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+import Link from "next/link";
+import { pricingPlans } from "@/db/offers";
+
+const PricingPlans = () => {
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("monthly");
+
+  const getPrice = (price: string) => {
+    const monthlyPrice = parseFloat(price.replace(/[^0-9.]/g, ""));
+    return billingPeriod === "yearly" ? (monthlyPrice * 0.8).toFixed(2) : monthlyPrice.toFixed(2);
+  };
+
+  return (
+    <section id="pricing" className="py-20 px-6 md:px-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Choose Your <span className="gradient-heading">Live Experience</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Select a plan tailored to your live event needs with access to our full lineup of streams.
+          </p>
+          <div className="flex justify-center mt-8">
+            <div className="bg-gray-100 p-1 rounded-full inline-flex">
+              {["monthly", "yearly"].map((period) => (
+                <button
+                  key={period}
+                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                    billingPeriod === period
+                      ? "bg-white shadow-md text-gray-800"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                  onClick={() => setBillingPeriod(period as "monthly" | "yearly")}
+                >
+                  {period.charAt(0).toUpperCase() + period.slice(1)}
+                  {period === "yearly" && (
+                    <span className="text-xs font-bold text-green-500"> Save 20%</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {pricingPlans.map((plan) => (
+            <div
+              key={plan.priceId}
+              className={`rounded-xl flex flex-col overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${
+                plan.isPopular
+                  ? "border-2 border-violet-400 relative"
+                  : "bg-white shadow-md"
+              }`}
+            >
+              {plan.isPopular && (
+                <div className="absolute top-0 right-0 bg-violet-400 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                  MOST POPULAR
+                </div>
+              )}
+              <div className="flex flex-col flex-1 p-6">
+                <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+                <div className="mb-4">
+                  <span className="text-3xl font-bold">${getPrice(plan.price)}</span>
+                  <span className="text-gray-500 text-sm">
+                    /{billingPeriod === "yearly" ? "mo (billed yearly)" : "month"}
+                  </span>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
+                <ul className="space-y-3 mb-6 flex-1">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <Check size={18} className="text-green-500 mr-2 mt-0.5 shrink-0" />
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={`/checkout?plan=${plan.title.toLowerCase()}&billing=${billingPeriod}`}
+                  className="block w-full mt-auto"
+                >
+                  <Button
+                    className={`w-full ${
+                      plan.isPopular ? "btn-primary" : "btn-secondary"
+                    }`}
+                  >
+                    Choose {plan.title}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-12 text-gray-500 text-sm">
+          All plans include a 7-day money-back guarantee.
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default PricingPlans;
+
+================
+File: providers.tsx
+================
+'use client';
+import React from 'react';
+import Marquee from 'react-fast-marquee';
+import Typewriter from 'typewriter-effect';
+
+export const ProvidersSection = () => {
+  const services = [
+    'Netflix',
+    'Hulu',
+    'Apple TV+',
+    'Amazon Prime',
+    'Disney+',
+    'HBO Max',
+  ];
+
+  return (
+    <div className="w-full flex flex-col flex-nowrap overflow-hidden [mask-image:linear-gradient(to_right,transparent_0,black_128px,black_calc(100%-128px),transparent_100%)]">
+      <div className="text-center text-2xl md:text-4xl font-semibold text-gray-800 py-10">
+        Enjoy{' '}
+        <span className="inline-block gradient-heading">
+          <Typewriter
+            options={{
+              strings: services,
+              autoStart: true,
+              loop: true,
+              delay: 50, // Typing speed (ms per character)
+              deleteSpeed: 30, // Deleting speed (ms per character)
+              // @ts-ignore
+              pauseFor: 1500, // Pause after typing each service (ms)
+              cursor: '', // Default cursor
+              cursorClassName: 'text-violet-600', // Match theme
+            }}
+          />
+        </span>{' '}
+        with {process.env.NEXT_PUBLIC_SITE_NAME}
+      </div>
+      <Marquee>
+        {[
+          { name: 'Apple TV', url: './providers/appletv.webp' },
+          { name: 'Disney', url: './providers/disney.webp' },
+          { name: 'HBO Max', url: './providers/hbomax.webp' },
+          { name: 'Hulu', url: './providers/hulu.webp' },
+          { name: 'Netflix', url: './providers/netflix.webp' },
+          { name: 'Prime Video', url: './providers/primevideo.webp' },
+        ].map((item, index) => (
+          <div key={index} className="rounded-xl overflow-hidden mx-4">
+            <img src={item.url} alt={item.name} className="h-80" />
+          </div>
+        ))}
+      </Marquee>
+    </div>
+  );
+};
+
+================
+File: testimonials.tsx
+================
+'use client'
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+
+const testimonials = [
+  {
+    id: 1,
+    name: 'Sarah Johnson',
+    rating: 5,
+    text: `${ process.env.NEXT_PUBLIC_SITE_NAME } changed how I watch TV! The channel selection is amazing, and I love being able to watch my favorite shows on any device.`,
+    location: 'New York, USA'
+  },
+  {
+    id: 2,
+    name: 'Michael Chen',
+    rating: 5,
+    text: `I\'ve tried many IPTV services, but ${ process.env.NEXT_PUBLIC_SITE_NAME } is by far the most reliable. No buffering issues and 4K quality is superb!`,
+    location: 'Toronto, Canada'
+  },
+  {
+    id: 3,
+    name: 'Priya Sharma',
+    rating: 4,
+    text: 'Great value for money and excellent customer service. When I had an issue, they resolved it within minutes. Very impressed!',
+    location: 'London, UK'
+  },
+  {
+    id: 4,
+    name: 'David Rodriguez',
+    rating: 5,
+    text: 'The channel variety is incredible. I can watch sports from around the world that I couldn\'t access before. Totally worth it!',
+    location: 'Barcelona, Spain'
+  },
+  {
+    id: 5,
+    name: 'Emma Wilson',
+    rating: 5,
+    text: `I\'ve been using ${ process.env.NEXT_PUBLIC_SITE_NAME } for 6 months now and have zero complaints. The app works flawlessly on all my devices.`,
+    location: 'Sydney, Australia'
+  }
+];
+
+const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => {
+  return (
+    <div className="card-highlight p-6 h-full flex flex-col">
+      <div className="flex text-yellow-400 mb-3">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            size={18}
+            fill={i < testimonial.rating ? 'currentColor' : 'none'}
+            className={i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}
+          />
+        ))}
+      </div>
+      <p className="text-gray-700 italic mb-4 flex-grow">{testimonial.text}</p>
+      <div>
+        <div className="font-semibold">{testimonial.name}</div>
+        <div className="text-gray-500 text-sm">{testimonial.location}</div>
+      </div>
+    </div>
+  );
+};
+
+const Testimonials = () => {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getVisibleCount = () => {
+    if (width < 640) return 1;
+    if (width < 1024) return 2;
+    return 3;
+  };
+
+  const visibleCount = getVisibleCount();
+  const maxSlide = testimonials.length - visibleCount;
+
+  const nextSlide = () => {
+    setActiveSlide(prev => (prev >= maxSlide ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setActiveSlide(prev => (prev <= 0 ? maxSlide : prev - 1));
+  };
+
+  // Auto-advance slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [activeSlide, maxSlide]);
+
+  return (
+    <section id="testimonials" className="py-10 pb-20 px-6 md:px-12">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            What Our <span className="gradient-heading">Customers Say</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Join thousands of satisfied customers who have upgraded their entertainment experience with { process.env.NEXT_PUBLIC_SITE_NAME }.
+          </p>
+        </div>
+        
+        <div className="relative">
+          <div className="overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${activeSlide * (100 / visibleCount)}%)` }}
+            >
+              {testimonials.map(testimonial => (
+                <div 
+                  key={testimonial.id} 
+                  className="w-full px-4 shrink-0"
+                  style={{ width: `${100 / visibleCount}%` }}
+                >
+                  <TestimonialCard testimonial={testimonial} />
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <button 
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all z-10"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft size={24} className="text-gray-700" />
+          </button>
+          
+          <button 
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all z-10"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight size={24} className="text-gray-700" />
+          </button>
+        </div>
+        
+        <div className="flex justify-center mt-8 space-x-2">
+          {[...Array(maxSlide + 1)].map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveSlide(idx)}
+              className={`w-2.5 h-2.5 rounded-full transition-all ${
+                activeSlide === idx ? 'bg-violet-400 w-6' : 'bg-violet-200'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Testimonials;
+
+================
+File: theme2-layout.tsx
+================
+import React from 'react';
+import Header from './header';
+import Footer from './footer';
+
+export const Theme2Layout = ({ children }: any) => {
+  return (
+    <>
+      <Header />
+      { children }
+      <Footer />
+    </>
+  );
+};
+
+================
+File: why-choose-us.tsx
+================
+'use client';
+
+import { useSpring, animated } from '@react-spring/web';
+import {
+  Shield,
+  Server,
+  Video,
+  DollarSign,
+  Headphones,
+  Zap,
+} from 'lucide-react';
+
+export const WhyChooseUsSection = () => {
+  const features = [
+    {
+      title: 'Antifreeze Technology',
+      description: 'Seamless streaming with Antifreeze tech.',
+      icon: <Zap className="text-violet-600" size={32} />,
+    },
+    {
+      title: 'Fortified Security Measures',
+      description: 'Your safety, our priority.',
+      icon: <Shield className="text-violet-600" size={32} />,
+    },
+    {
+      title: 'Cutting-Edge Servers',
+      description: 'Top-tier performance guaranteed.',
+      icon: <Server className="text-violet-600" size={32} />,
+    },
+    {
+      title: 'Latest VODs & Series',
+      description: 'Stay current, stay entertained.',
+      icon: <Video className="text-violet-600" size={32} />,
+    },
+    {
+      title: 'Affordable Rates',
+      description: 'Quality at a great price.',
+      icon: <DollarSign className="text-violet-600" size={32} />,
+    },
+    {
+      title: '24/7 Online Support',
+      description: 'Always here for you.',
+      icon: <Headphones className="text-violet-600" size={32} />,
+    },
+  ];
+
+  return (
+    <section id="why-choose-us" className="py-20 px-6 md:px-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          WHY <span className="gradient-heading">CHOOSE US</span>
+        </h2>
+        <p className="text-lg text-gray-600 mb-8">
+          We Are The Best IPTV Subscription Services
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature, index) => {
+            // React Spring animation for hover effect
+            const [springProps, api] = useSpring(() => ({
+              scale: 1,
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              config: { tension: 200, friction: 20 },
+            }));
+
+            const handleHover = () => {
+              api.start({
+                scale: 1.05,
+                boxShadow: '0 8px 12px rgba(0, 0, 0, 0.2)',
+              });
+            };
+
+            const handleUnhover = () => {
+              api.start({
+                scale: 1,
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              });
+            };
+
+            return (
+              <>
+                {/* @ts-ignore */}
+                <animated.div
+                  key={index}
+                  style={springProps}
+                  onMouseEnter={handleHover}
+                  onMouseLeave={handleUnhover}
+                  className="bg-white p-6 rounded-lg shadow-md"
+                >
+                  <div className="flex justify-center mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600">{feature.description}</p>
+                </animated.div>
+              </>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+
+================================================================
+End of Codebase
+================================================================

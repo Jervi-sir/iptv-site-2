@@ -18,11 +18,11 @@ const Header = () => {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-8 items-center">
-          <Link href="/" className="font-medium text-gray-700 hover:text-live-red transition-colors">Home</Link>
-          <Link href="/#pricing" className="font-medium text-gray-700 hover:text-live-red transition-colors">Plans</Link>
-          <Link href="/#testimonials" className="font-medium text-gray-700 hover:text-live-red transition-colors">Reviews</Link>
-          <Link href="/checkout">
-            <Button className="btn-primary">Join Now</Button>
+          <Link href="/" className="font-medium text-gray-700 hover:text-iptv-purple transition-colors">Home</Link>
+          <Link href="/#pricing" className="font-medium text-gray-700 hover:text-iptv-purple transition-colors">Pricing</Link>
+          <Link href="/#testimonials" className="font-medium text-gray-700 hover:text-iptv-purple transition-colors">Testimonials</Link>
+          <Link href={`#pricing`}>
+            <Button className="btn-primary">Free Trial</Button>
           </Link>
         </nav>
         
@@ -38,27 +38,27 @@ const Header = () => {
           <nav className="flex flex-col items-center pt-10 space-y-6">
             <Link 
               href="/" 
-              className="text-xl font-medium text-gray-700 hover:text-live-red transition-colors"
+              className="text-xl font-medium text-gray-700 hover:text-iptv-purple transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
               href="/#pricing" 
-              className="text-xl font-medium text-gray-700 hover:text-live-red transition-colors"
+              className="text-xl font-medium text-gray-700 hover:text-iptv-purple transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Plans
+              Pricing
             </Link>
             <Link 
               href="/#testimonials" 
-              className="text-xl font-medium text-gray-700 hover:text-live-red transition-colors"
+              className="text-xl font-medium text-gray-700 hover:text-iptv-purple transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Reviews
+              Testimonials
             </Link>
-            <Link href="/checkout" onClick={() => setIsMenuOpen(false)}>
-              <Button className="btn-primary text-lg px-8 py-4">Join Now</Button>
+            <Link href={`#pricing`} onClick={() => setIsMenuOpen(false)}>
+              <Button className="btn-primary text-lg px-8 py-4">Free Trial</Button>
             </Link>
           </nav>
         </div>
