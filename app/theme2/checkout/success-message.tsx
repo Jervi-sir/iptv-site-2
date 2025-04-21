@@ -15,13 +15,13 @@ export const SuccessMessage = ({
       <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
         <CheckCircle className="text-green-600" size={36} />
       </div>
-      <h1 className="text-2xl font-bold mb-2">Welcome to Your Learning Journey!</h1>
+      <h1 className="text-2xl font-bold mb-2">Your Growth Plan is Active!</h1>
       <p className="text-gray-600 mb-8">
-        Thank you for subscribing. Your {plan.name} plan is now active. Start exploring 50,000+ e-books, audiobooks, and courses!
+        Welcome to GrowEasy! Your {plan.name} plan is ready. Start using your digital tools now.
       </p>
       <div className="space-y-4 mb-8">
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="font-semibold mb-2">Learning Plan Details</h3>
+          <h3 className="font-semibold mb-2">Plan Details</h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="text-gray-500 text-left">Plan:</div>
             <div className="text-right font-medium">{plan.name}</div>
@@ -34,9 +34,9 @@ export const SuccessMessage = ({
           </div>
         </div>
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="font-semibold mb-2">What's Next?</h3>
+          <h3 className="font-semibold mb-2">Get Started</h3>
           <p className="text-sm text-gray-600 text-left">
-            Check your email for login details and instructions to access your learning library.
+            Check your email for login details and instructions to access your GrowEasy dashboard.
           </p>
         </div>
       </div>

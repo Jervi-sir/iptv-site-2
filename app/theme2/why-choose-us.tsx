@@ -1,60 +1,51 @@
-'use client';
-
 import { useSpring, animated } from '@react-spring/web';
-import {
-  Shield,
-  Server,
-  Video,
-  DollarSign,
-  Headphones,
-  Zap,
-  Book,
-} from 'lucide-react';
+import { Book, DollarSign, Globe, Headphones, Server, Shield } from 'lucide-react';
 
 export const WhyChooseUsSection = () => {
+  const features = [
+    {
+      title: 'All-in-One Tools',
+      description: 'Access 10+ tools in one subscription.',
+      icon: <Book className="text-blue-500" size={32} />,
+    },
+    {
+      title: 'Seamless Integrations',
+      description: 'Connect with 50+ apps you love.',
+      icon: <Globe className="text-blue-500" size={32} />,
+    },
+    {
+      title: 'Secure & Reliable',
+      description: 'Your data is safe with us.',
+      icon: <Shield className="text-blue-500" size={32} />,
+    },
+    {
+      title: 'Affordable Pricing',
+      description: 'Plans that fit any budget.',
+      icon: <DollarSign className="text-blue-500" size={32} />,
+    },
+    {
+      title: 'Fast Performance',
+      description: 'Cloud-based tools, always ready.',
+      icon: <Server className="text-blue-500" size={32} />,
+    },
+    {
+      title: '24/7 Support',
+      description: 'We’re here to help, anytime.',
+      icon: <Headphones className="text-blue-500" size={32} />,
+    },
+  ];
 
   return (
     <section id="why-choose-us" className="py-20 px-6 md:px-12 bg-gray-50">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          WHY <span className="gradient-heading">CHOOSE LEARNSPHERE</span>
+          Why <span className="gradient-heading">GrowEasy</span>?
         </h2>
         <p className="text-lg text-gray-600 mb-8">
-          Your Trusted Partner for Lifelong Learning
+          The simplest way to power your business with digital tools
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Curated Content",
-              description: "Handpicked resources for maximum value.",
-              icon: <Book className="text-purple-600" size={32} />,
-            },
-            {
-              title: "Secure Platform",
-              description: "Your data is safe with us.",
-              icon: <Shield className="text-purple-600" size={32} />,
-            },
-            {
-              title: "High-Performance Access",
-              description: "Fast, reliable content delivery.",
-              icon: <Server className="text-purple-600" size={32} />,
-            },
-            {
-              title: "Fresh Content Weekly",
-              description: "Stay inspired with new releases.",
-              icon: <Video className="text-purple-600" size={32} />,
-            },
-            {
-              title: "Affordable Plans",
-              description: "Learning that fits your budget.",
-              icon: <DollarSign className="text-purple-600" size={32} />,
-            },
-            {
-              title: "24/7 Support",
-              description: "We’re here to help, anytime.",
-              icon: <Headphones className="text-purple-600" size={32} />,
-            },
-          ].map((feature, index) => {
+          {features.map((feature, index) => {
             const [springProps, api] = useSpring(() => ({
               scale: 1,
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -77,20 +68,20 @@ export const WhyChooseUsSection = () => {
 
             return (
               <>
-               {/* @ts-ignore */}
-              <animated.div
-                key={index}
-                style={springProps}
-                onMouseEnter={handleHover}
-                onMouseLeave={handleUnhover}
-                className="bg-white p-6 rounded-lg shadow-md"
-              >
-                <div className="flex justify-center mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </animated.div>
+                {/* @ts-ignore */}
+                <animated.div
+                  key={index}
+                  style={springProps}
+                  onMouseEnter={handleHover}
+                  onMouseLeave={handleUnhover}
+                  className="bg-white p-6 rounded-lg shadow-md"
+                >
+                  <div className="flex justify-center mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600">{feature.description}</p>
+                </animated.div>
               </>
             );
           })}

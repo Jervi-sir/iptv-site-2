@@ -19,7 +19,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 // Map plan titles to details
 const planDetails = pricingPlans.reduce(
   (acc, plan) => {
-    const price = parseFloat(plan.price.replace(/[^0-9.]/g, '')); // e.g., 12.99
+    const price = parseFloat(plan.price.replace(/[^0-9.]/g, '')); // e.g., 9.99
     acc[plan.title.toLowerCase().replace(' ', '-')] = {
       name: plan.title,
       price,
@@ -30,7 +30,7 @@ const planDetails = pricingPlans.reduce(
   {} as Record<string, { name: string; price: number; savings: string }>
 );
 
-// Map plan IDs for URL params (e.g., "1-month" -> "1-month")
+// Map plan IDs for URL params
 const planIdMap: Record<string, string> = {
   '1-month': '1-month',
   '3-months': '3-months',
@@ -75,14 +75,13 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
   const [clientSecret, setClientSecret] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [isComplete, setIsComplete] = useState(false);
-  // Initialize with default plan "1-month"
   const [selectedPlan, setSelectedPlan] = useState<string>('1-month');
 
   useEffect(() => {
     if (planId && planIdMap[planId]) {
       console.log('Overriding with query param:', { planId });
       setSelectedPlan(planId);
-      setStep(2); // Skip to step 2 if planId is provided
+      setStep(2);
     } else {
       console.log('Using default plan: 1-month');
       setStep(1);
@@ -157,9 +156,9 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
 
   const nextStep = () => {
     const stepFields: (keyof FormData)[][] = [
-      [], // Step 1: Plan selection
-      ['fullName', 'email', 'phone'], // Step 2: Personal info
-      [], // Step 3: Payment (handled by Stripe)
+      [],
+      ['fullName', 'email', 'phone'],
+      [],
     ];
     if (step === 1 && selectedPlan) {
       setStep(2);
@@ -184,10 +183,10 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
           ) : (
             <>
               <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold mb-2">Start Your Learning Journey</h1>
+                <h1 className="text-3xl font-bold mb-2">Unlock Your Growth Tools</h1>
                 {selectedPlan && (
                   <p className="text-gray-600">
-                    Subscribing to {plan.name} for unlimited learning
+                    Subscribing to {plan.name} for all-in-one digital tools
                   </p>
                 )}
               </div>
@@ -197,7 +196,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                   <div key={num} className="flex w-full items-center">
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center z-10 ${
-                        step >= num ? 'bg-purple-400 text-white' : 'bg-gray-200 text-gray-500'
+                        step >= num ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
                       }`}
                     >
                       {num}
@@ -205,7 +204,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                     {num < 3 && (
                       <div
                         className={`h-1 flex-grow ${
-                          step > num ? 'bg-purple-400' : 'bg-gray-200'
+                          step > num ? 'bg-blue-500' : 'bg-gray-200'
                         }`}
                       />
                     )}
@@ -219,14 +218,14 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                     <CardContent className="p-6">
                       {step === 1 && (
                         <div>
-                          <h2 className="text-xl font-semibold mb-6">Choose Your Learning Plan</h2>
+                          <h2 className="text-xl font-semibold mb-6">Select Your Growth Plan</h2>
                           <div className="flex flex-col gap-4">
                             {pricingPlans.map((plan) => (
                               <div
                                 key={plan.priceId}
                                 className={`rounded-xl flex overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${
                                   plan.isPopular
-                                    ? 'border-2 border-purple-400 relative'
+                                    ? 'border-2 border-blue-500 relative'
                                     : 'bg-white shadow-md'
                                 } ${
                                   selectedPlan === plan.title.toLowerCase().replace(' ', '-')
@@ -235,7 +234,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                                 }`}
                               >
                                 {plan.isPopular && (
-                                  <div className="absolute top-0 right-0 bg-purple-400 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                  <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                                     BEST VALUE
                                   </div>
                                 )}
@@ -300,7 +299,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                           stripe={stripePromise}
                           options={{
                             clientSecret,
-                            appearance: { theme: 'stripe', variables: { colorPrimary: '#6b21a8' } },
+                            appearance: { theme: 'stripe', variables: { colorPrimary: '#3b82f6' } },
                           }}
                         >
                           <PaymentForm
@@ -315,7 +314,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                       )}
                       {step === 3 && !clientSecret && (
                         <div className="flex items-center justify-center p-6">
-                          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-purple-400">
+                          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-blue-500">
                             <span className="sr-only">Loading...</span>
                           </div>
                         </div>

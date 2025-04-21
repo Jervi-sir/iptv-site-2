@@ -22,7 +22,7 @@ export const PersonalInfoForm = ({
       nextStep();
     }}
   >
-    <h2 className="text-xl font-semibold mb-6">Your Information</h2>
+    <h2 className="text-xl font-semibold mb-6">Your Details</h2>
     <div className="space-y-4">
       {[
         { id: 'fullName', label: 'Full Name', Icon: User, type: 'text' },

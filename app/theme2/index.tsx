@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import Hero from './hero';
-import Testimonials from './testimonials';
-import PricingPlans from './pricing';
 import { Theme2Layout } from './theme2-layout';
 import { FreeTrialSection } from './free-trial';
 import { WhyChooseUsSection } from './why-choose-us';
 import { AnimatedSection } from './animated-section';
+import { Hero } from './hero';
+import { PricingPlans } from './pricing';
+import { Testimonials } from './testimonials';
 
 export const Theme2 = () => {
   return (
@@ -26,7 +26,7 @@ export const Theme2 = () => {
       </AnimatedSection>
       {/* Pricing (3s animation) */}
       <AnimatedSection preset="blur-slide" duration={3}>
-        <PricingPlans doRedirect={true} />
+        <PricingPlans />
       </AnimatedSection>
       {/* Testimonials (3s animation) */}
       <AnimatedSection preset="blur-slide" duration={3}>
