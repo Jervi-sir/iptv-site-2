@@ -18,15 +18,11 @@ export const Footer = () => {
               Your all-in-one platform for digital tools to grow your business.
             </p>
             <div className="flex flex-col gap-4 items-center md:flex-row">
-              {[
-                { icon: <PhoneIcon size={18} />, name: 'Contact', url: contacts.whatsapp },
-                { icon: <Book size={18} />, name: 'Subscribe to ' + process.env.NEXT_PUBLIC_SITE_NAME, url: '#pricing' },
+                           {[
+                { icon: <PhoneIcon size={18} /> , name: 'Contact', url: contacts.whatsapp, external: true,  },
+                { icon: <ShoppingBagIcon size={18} /> , name: 'Subscribe to ' + process.env.NEXT_PUBLIC_SITE_NAME, url: '#pricing', external: false,  },
               ].map((item, index) => (
-                <Link
-                  key={index}
-                  href={item.url}
-                  className="bg-zinc-900 hover:bg-zinc-800 text-white font-bold py-2 px-4 border-b-4 border-zinc-800 hover:border-zinc-500 rounded flex flex-row items-center cursor-pointer gap-2 text-sm transition"
-                >
+                <Link key={index} href={item.url} target={item.external ? '_blank' : '_self'} className="bg-zinc-900 hover:bg-zinc-800 text-white font-bold py-2 px-4 border-b-4 border-zinc-800 hover:border-zinc-500 rounded flex flex-row items-center cursor-pointer gap-2 text-sm transition">
                   {item.icon} {item.name}
                 </Link>
               ))}
