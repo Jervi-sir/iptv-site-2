@@ -6,42 +6,42 @@ export const WhyChooseUsSection = () => {
     {
       title: 'All-in-One Tools',
       description: 'Access 10+ tools in one subscription.',
-      icon: <Book className="text-blue-500" size={32} />,
+      icon: <Book className="text-zinc-500" size={32} />,
     },
     {
       title: 'Seamless Integrations',
       description: 'Connect with 50+ apps you love.',
-      icon: <Globe className="text-blue-500" size={32} />,
+      icon: <Globe className="text-zinc-500" size={32} />,
     },
     {
       title: 'Secure & Reliable',
       description: 'Your data is safe with us.',
-      icon: <Shield className="text-blue-500" size={32} />,
+      icon: <Shield className="text-zinc-500" size={32} />,
     },
     {
       title: 'Affordable Pricing',
       description: 'Plans that fit any budget.',
-      icon: <DollarSign className="text-blue-500" size={32} />,
+      icon: <DollarSign className="text-zinc-500" size={32} />,
     },
     {
       title: 'Fast Performance',
       description: 'Cloud-based tools, always ready.',
-      icon: <Server className="text-blue-500" size={32} />,
+      icon: <Server className="text-zinc-500" size={32} />,
     },
     {
       title: '24/7 Support',
       description: 'We’re here to help, anytime.',
-      icon: <Headphones className="text-blue-500" size={32} />,
+      icon: <Headphones className="text-zinc-500" size={32} />,
     },
   ];
 
   return (
-    <section id="why-choose-us" className="py-20 px-6 md:px-12 bg-gray-50">
+    <section id="why-choose-us" className="py-20 px-6 md:px-12 bg-zinc-950">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
           Why <span className="gradient-heading">GrowEasy</span>?
         </h2>
-        <p className="text-lg text-gray-600 mb-8">
+        <p className="text-lg text-gray-400 mb-8">
           The simplest way to power your business with digital tools
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -74,13 +74,13 @@ export const WhyChooseUsSection = () => {
                   style={springProps}
                   onMouseEnter={handleHover}
                   onMouseLeave={handleUnhover}
-                  className="bg-white p-6 rounded-lg shadow-md"
+                  className="bg-zinc-900 p-6 rounded-lg shadow-md"
                 >
                   <div className="flex justify-center mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-300 mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p className="text-gray-200">{feature.description}</p>
                 </animated.div>
               </>
             );

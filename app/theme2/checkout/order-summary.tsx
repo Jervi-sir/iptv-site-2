@@ -9,8 +9,8 @@ export const OrderSummary = ({
   price: number;
   duration: string;
 }) => (
-  <Card className="shadow-md sticky top-4">
-    <CardContent className="p-6">
+  <Card className="shadow-md sticky top-2 border-zinc-800">
+    <CardContent className="p-6 py-2">
       <h3 className="text-lg font-semibold mb-4">Growth Plan Summary</h3>
       <div className="space-y-3 mb-4">
         {[
@@ -28,7 +28,7 @@ export const OrderSummary = ({
           ...(plan.savings ? [{ label: 'Savings', value: plan.savings }] : []),
         ].map(({ label, value }) => (
           <div key={label} className={`flex justify-between ${label === 'Total' ? 'border-t pt-3 mt-3' : ''}`}>
-            <span className="text-gray-600">{label}</span>
+            <span className="text-gray-500">{label}</span>
             <span className={label === 'Total' ? 'text-lg font-bold' : 'font-medium'}>{value}</span>
           </div>
         ))}

@@ -40,43 +40,41 @@ export const PaidCard = ({ amount, currency, paymentMethod, date, isDark }: Paid
   });
 
   return (
-    <div className="relative z-50">
+    <div className="relative z-50 ">
       <Card
         className={`max-w-md w-full space-y-6 p-6 rounded-lg shadow-lg ${
           isDark ? 'bg-zinc-950 text-gray-50' : 'bg-white text-gray-900'
-        }`}
+        } bg-zinc-950 border-zinc-900`}
       >
         <div className="flex flex-col items-center">
-          <CircleCheckIcon className="text-green-500 h-16 w-16" />
-          <h1 className="text-3xl font-bold mt-4">Payment Successful</h1>
-          <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'} mt-2`}>
+          <CircleCheckIcon className="text-amber-500 h-16 w-16" />
+          <h1 className="text-3xl font-bold mt-4 text-zinc-50">Payment Successful</h1>
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'} text-zinc-400 mt-2`}>
             Thank you for your payment.
           </p>
         </div>
         <div
-          className={`border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} pt-6 space-y-4`}
+          className={`border-t border-zinc-900 pt-6 space-y-4`}
         >
           <div className="flex justify-between">
             <span className={`${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Amount Paid:</span>
-            <span className="font-medium">{formattedAmount}</span>
+            <span className="font-medium text-zinc-100">{formattedAmount}</span>
           </div>
           <div className="flex justify-between">
             <span className={`${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Payment Method:</span>
-            <span className="font-medium">{paymentMethodText}</span>
+            <span className="font-medium text-zinc-100">{paymentMethodText}</span>
           </div>
           <div className="flex justify-between">
             <span className={`${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Date & Time:</span>
-            <span className="font-medium">{formattedDate}</span>
+            <span className="font-medium text-zinc-100">{formattedDate}</span>
           </div>
         </div>
         <div className="flex justify-center">
           <Link
             href="/checkout"
             className={`inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-              isDark
-                ? 'bg-gray-50 text-gray-900 hover:bg-gray-200 focus:ring-gray-300 focus:ring-offset-zinc-950'
-                : 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500'
-            }`}
+              'bg-zinc-900 text-white hover:bg-amber-600 focus:ring-amber-500'
+            } transition`}
             prefetch={false}
           >
             Back to Home

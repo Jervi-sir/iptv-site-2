@@ -56,7 +56,7 @@ function SuccessPageContent() {
   if (loading) {
     return (
       <Layout isDark={isDark} toggleTheme={toggleTheme}>
-        <div className={`flex flex-col items-center justify-center min-h-screen gap-4 ${isDark ? 'bg-zinc-950' : 'bg-gray-50'}`}>
+        <div className={`flex flex-col items-center justify-center min-h-screen gap-4 ${isDark ? 'bg-zinc-950' : 'bg-gray-50'} bg-zinc-950`}>
           <Loader2 className="animate-spin" size={30} />
           <p className={`font-mono animate-caret-blink delay-1000 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>   Loading...</p>
         </div>
@@ -94,14 +94,7 @@ function SuccessPageContent() {
 }
 
 const Layout = ({ children, isDark, toggleTheme }: { children: React.ReactNode; isDark: boolean; toggleTheme: () => void }) => (
-  <div className={`flex flex-col items-center justify-center min-h-screen ${isDark ? 'bg-zinc-950' : 'bg-gray-50'} relative`}>
-    <button
-      onClick={toggleTheme}
-      className={`absolute top-4 right-4 p-2 rounded-full ${isDark ? 'bg-gray-800 text-gray-200 hover:bg-gray-700' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'} transition`}
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-    >
-      {isDark ? <Sun size={20} /> : <Moon size={20} />}
-    </button>
+  <div className={`flex flex-col items-center justify-center min-h-screen ${isDark ? 'bg-zinc-950' : 'bg-gray-50'} relative bg-zinc-950`}>
     <main className="overflow-hidden">
       <div
         aria-hidden

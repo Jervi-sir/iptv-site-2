@@ -2,8 +2,7 @@
 @import "tw-animate-css";
 
 /* Define theme variables for Tailwind v4 */
-:root {
-  /* Core colors */
+/* :root {
   --color-background: hsl(258 100% 98%);
   --color-foreground: hsl(240 10% 4%);
 
@@ -32,13 +31,11 @@
   --color-input: hsl(240 6% 90%);
   --color-ring: hsl(254 79% 74%);
 
-  --color-site-purple: hsl(254 79% 74%);
-  --color-site-blue: hsl(199 84% 49%);
+  --color-iptv-purple: hsl(254 79% 74%);
+  --color-iptv-blue: hsl(199 84% 49%);
 
-  /* Radius */
   --radius-default: 0.75rem;
 
-  /* Sidebar colors */
   --color-sidebar-background: hsl(0 0% 98%);
   --color-sidebar-foreground: hsl(240 5% 26%);
   --color-sidebar-primary: hsl(254 79% 74%);
@@ -47,8 +44,62 @@
   --color-sidebar-accent-foreground: hsl(240 6% 10%);
   --color-sidebar-border: hsl(220 13% 91%);
   --color-sidebar-ring: hsl(217 91% 60%);
+} */
+
+:root {
+  --color-background: oklch(0.18 0.01 260);
+  --color-foreground: oklch(0.90 0.005 106);
+
+  --color-card: oklch(0.22 0.01 260);
+  --color-card-foreground: oklch(0.90 0.005 106);
+
+  --color-popover: oklch(0.22 0.01 260);
+  --color-popover-foreground: oklch(0.90 0.005 106);
+
+  --color-primary: oklch(0.75 0.15 270);
+  --color-primary-foreground: oklch(0.18 0.01 260);
+
+  --color-secondary: oklch(0.30 0.01 260);
+  --color-secondary-foreground: oklch(0.90 0.005 106);
+
+  --color-muted: oklch(0.25 0.01 260);
+  --color-muted-foreground: oklch(0.60 0.01 260);
+
+  --color-accent: oklch(0.60 0.20 200);
+  --color-accent-foreground: oklch(0.90 0.005 106);
+
+  --color-destructive: oklch(0.65 0.20 20);
+  --color-destructive-foreground: oklch(0.90 0.005 106);
+
+  --color-border: oklch(0.25 0.01 260 / 20%);
+  --color-input: oklch(0.25 0.01 260 / 20%);
+  --color-ring: oklch(0.75 0.15 270);
+
+  --color-iptv-purple: oklch(0.75 0.15 270);
+  --color-iptv-blue: oklch(0.60 0.20 200);
+
+  --radius-default: 0.75rem;
+
+  --color-sidebar-background: oklch(0.20 0.01 260);
+  --color-sidebar-foreground: oklch(0.85 0.005 106);
+  --color-sidebar-primary: oklch(0.75 0.15 270);
+  --color-sidebar-primary-foreground: oklch(0.90 0.005 106);
+  --color-sidebar-accent: oklch(0.25 0.01 260);
+  --color-sidebar-accent-foreground: oklch(0.90 0.005 106);
+  --color-sidebar-border: oklch(0.25 0.01 260 / 20%);
+  --color-sidebar-ring: oklch(0.60 0.20 200);
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Extra css
+|--------------------------------------------------------------------------
+*/
+
+html {
+  scroll-behavior: smooth;
+}
 /* Global styles (replacing * { @apply border-border }) */
 * {
   box-sizing: border-box;
@@ -65,25 +116,25 @@ body {
 
 /* Component styles */
 .gradient-heading {
-  background: linear-gradient(to right, var(--color-site-purple), var(--color-site-blue));
+  background: linear-gradient(to right, oklch(0.80 0.25 80), oklch(0.75 0.15 90));
   background-clip: text;
   color: transparent;
 }
 
 .gradient-bg {
-  background: linear-gradient(to bottom right, var(--color-site-purple), var(--color-site-blue));
+  background: linear-gradient(to bottom right, oklch(0.80 0.15 80), oklch(0.65 0.15 90));
 }
 
 .card-highlight {
-  border: 1px solid rgba(254, 79%, 74%, 0.2); /* site-purple/20 */
-  background: hsl(0 0% 100%);
-  box-shadow: 0 10px 15px -3px rgba(254, 79%, 74%, 0.1); /* shadow-lg with site-purple/10 */
+  border: 1px solid oklch(0.80 0.15 80 / 20%); /* Gold light at 20% opacity */
+  background: oklch(0.22 0.01 260); /* Matches dark zinc --color-card for consistency */
+  box-shadow: 0 10px 15px -3px oklch(0.80 0.15 80 / 10%); /* Shadow with gold light at 10% opacity */
   border-radius: var(--radius-default);
 }
 
 .btn-primary {
-  background: var(--color-site-purple);
-  color: hsl(0 0% 100%);
+  background: oklch(0.80 0.25 80); /* Bright gold */
+  color: oklch(0.20 0.01 260); /* Dark zinc background for contrast */
   border-radius: 9999px; /* rounded-full */
   padding: 0.75rem 1.5rem; /* px-6 py-3 */
   font-weight: 500; /* font-medium */
@@ -92,14 +143,14 @@ body {
 }
 
 .btn-primary:hover {
-  background: color-mix(in srgb, var(--color-site-purple) 90%, black);
+  background: color-mix(in srgb, oklch(0.80 0.25 80) 90%, black);
   transform: scale(1.05);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* hover:shadow-md */
+  box-shadow: 0 4px 6px -1px oklch(0.0 0.0 0.0 / 10%); /* hover:shadow-md */
 }
 
 .btn-secondary {
-  background: var(--color-site-blue);
-  color: hsl(0 0% 100%);
+  background: oklch(0.65 0.25 80); /* Deeper gold */
+  color: oklch(0.20 0.01 260); /* Dark zinc background for contrast */
   border-radius: 9999px;
   padding: 0.75rem 1.5rem;
   font-weight: 500;
@@ -108,9 +159,9 @@ body {
 }
 
 .btn-secondary:hover {
-  background: color-mix(in srgb, var(--color-site-blue) 90%, black);
+  background: color-mix(in srgb, oklch(0.65 0.25 80) 90%, black);
   transform: scale(1.05);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px oklch(0.0 0.0 0.0 / 10%); /* hover:shadow-md */
 }
 
 /*
@@ -162,4 +213,59 @@ body {
 
 .read-the-docs {
   color: hsl(0 0% 53%); /* #888 */
+}
+
+.animate-infinite-scroll {
+  animation: scroll 20s linear infinite;
+  display: flex;
+  flex-shrink: 0;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Ensure the container handles the overflow and mask */
+.w-full {
+  width: 100%;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+/* Typewriter effect */
+.typewriter {
+  display: inline-block;
+  overflow: hidden; /* Hide text beyond the current width */
+  border-right: 2px solid #6b21a8; /* Violet cursor, matching theme */
+  white-space: nowrap; /* Keep text on one line */
+  animation: 
+    typing 2s steps(20, end), /* Typing animation */
+    blink-caret 0.75s step-end infinite; /* Blinking cursor */
+}
+
+/* Typing animation: Gradually increase width to reveal text */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Blinking cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: #6b21a8; }
 }

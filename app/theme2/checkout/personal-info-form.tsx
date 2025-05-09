@@ -40,7 +40,7 @@ export const PersonalInfoForm = ({
             value={formData[id as keyof FormData] as any}
             onChange={handleChange}
             required
-            className="bg-transparent text-black focus:bg-transparent"
+            className="bg-transparent text-grey-100 border-zinc-800 focus:bg-transparent"
           />
           {formErrors[id as keyof FormData] && (
             <div className="text-red-500 text-sm">{formErrors[id as keyof FormData] as any}</div>
@@ -49,10 +49,10 @@ export const PersonalInfoForm = ({
       ))}
     </div>
     <div className="flex gap-4 mt-8">
-      <Button type="button" variant="outline" onClick={prevStep}>
+      <Button type="button" variant="outline" className='cursor-pointer' onClick={prevStep}>
         Back to Plans
       </Button>
-      <Button type="submit" className="btn-primary flex-grow">
+      <Button type="submit" className="bg-yellow-600 cursor-pointer flex-grow text-zinc-950">
         Proceed to Payment
       </Button>
     </div>

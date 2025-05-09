@@ -176,7 +176,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
 
   return (
     <Theme2Layout>
-      <main className="flex-grow pt-28 pb-16 px-6 md:px-12 bg-gray-50">
+      <main className="flex-grow pt-28 pb-16 px-6 md:px-12 ">
         <div className="max-w-4xl mx-auto">
           {isComplete ? (
             <SuccessMessage plan={plan} price={price} duration={plan.name.toLowerCase()} />
@@ -195,16 +195,16 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                 {[1, 2, 3].map((num) => (
                   <div key={num} className="flex w-full items-center">
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center z-10 ${
-                        step >= num ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
+                      className={`w-10 h-10 rounded-full flex items-center justify-center z-10 font-bold ${
+                        step >= num ? 'bg-yellow-600 text-zinc-950' : 'bg-zinc-700 text-gray-200'
                       }`}
                     >
                       {num}
                     </div>
                     {num < 3 && (
                       <div
-                        className={`h-1 flex-grow ${
-                          step > num ? 'bg-blue-500' : 'bg-gray-200'
+                        className={`h-1 flex-grow font-bold ${
+                          step > num ? 'bg-yellow-600' : 'bg-zinc-700'
                         }`}
                       />
                     )}
@@ -214,8 +214,8 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
 
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="md:col-span-2">
-                  <Card className="shadow-md">
-                    <CardContent className="p-6">
+                  <Card className="shadow-md border-zinc-800">
+                    <CardContent className="p-6 py-2">
                       {step === 1 && (
                         <div>
                           <h2 className="text-xl font-semibold mb-6">Select Your Growth Plan</h2>
@@ -225,16 +225,16 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                                 key={plan.priceId}
                                 className={`rounded-xl flex overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 ${
                                   plan.isPopular
-                                    ? 'border-2 border-blue-500 relative'
-                                    : 'bg-white shadow-md'
+                                    ? 'border-2 border-zinc-500 relative'
+                                    : 'bg-zinc-950 shadow-md'
                                 } ${
                                   selectedPlan === plan.title.toLowerCase().replace(' ', '-')
-                                    ? 'border-2 border-green-500 bg-green-100'
+                                    ? 'border-2 border-yellow-500 bg-green-100'
                                     : ''
                                 }`}
                               >
                                 {plan.isPopular && (
-                                  <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                  <div className="absolute top-0 right-0 bg-zinc-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                                     BEST VALUE
                                   </div>
                                 )}
@@ -246,27 +246,27 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                                       <span className="text-gray-500 text-xs">/{plan.title.toLowerCase()}</span>
                                     </div>
                                     {plan.savings && (
-                                      <div className="text-green-500 font-semibold text-sm mb-2">
+                                      <div className="text-yellow-500 font-semibold text-sm mb-2">
                                         {plan.savings}
                                       </div>
                                     )}
-                                    <p className="text-gray-600 text-sm">{plan.description}</p>
+                                    <p className="text-gray-500 text-sm">{plan.description}</p>
                                   </div>
                                   <div className="flex-1 flex flex-col justify-between">
                                     <ul className="space-y-2 mb-4">
                                       {plan.features.map((feature, idx) => (
                                         <li key={idx} className="flex items-start">
-                                          <Check size={16} className="text-green-500 mr-2 mt-0.5 shrink-0" />
-                                          <span className="text-gray-700 text-sm">{feature}</span>
+                                          <Check size={16} className="text-yellow-500 mr-2 mt-0.5 shrink-0" />
+                                          <span className="text-gray-400 text-sm">{feature}</span>
                                         </li>
                                       ))}
                                     </ul>
                                     <Button
-                                      className={`w-full ${
-                                        plan.isPopular ? 'btn-primary' : 'btn-secondary'
+                                      className={`w-full cursor-pointer ${
+                                        plan.isPopular ? 'bg-yellow-600 text-zinc-950' : 'bg-zinc-800 text-zinc-100'
                                       } ${
                                         selectedPlan === plan.title.toLowerCase().replace(' ', '-')
-                                          ? 'bg-green-500 hover:bg-green-600'
+                                          ? 'bg-yellow-600 text-zinc-950 hover:bg-yellow-600'
                                           : ''
                                       }`}
                                       onClick={() => {
@@ -314,7 +314,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                       )}
                       {step === 3 && !clientSecret && (
                         <div className="flex items-center justify-center p-6">
-                          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-blue-500">
+                          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-zinc-500">
                             <span className="sr-only">Loading...</span>
                           </div>
                         </div>

@@ -18,14 +18,7 @@ function ErrorPageContent() {
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center min-h-screen ${isDark ? 'bg-zinc-950' : 'bg-gray-50'}`}>
-      <button
-        onClick={toggleTheme}
-        className={`absolute top-4 right-4 p-2 rounded-full ${isDark ? 'bg-gray-800 text-gray-200 hover:bg-gray-700' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'} transition`}
-        aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      >
-        {isDark ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
+    <div className={`flex flex-col items-center justify-center min-h-screen bg-zinc-950`}>
       <main className="overflow-hidden">
         <div
           aria-hidden
@@ -36,7 +29,7 @@ function ErrorPageContent() {
           <div className={`h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 ${isDark ? 'bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,45%,.04)_0,hsla(0,0%,25%,.02)_80%,transparent_100%)]' : 'bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.04)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)]'}`} />
         </div>
         <div className="relative z-50 flex flex-col items-center justify-center min-h-screen">
-          <Card className={`max-w-md w-full space-y-6 p-6 rounded-lg shadow-lg ${isDark ? 'bg-zinc-950 text-gray-50' : 'bg-white text-gray-900'}`}>
+          <Card className={`max-w-md w-full space-y-6 p-6 rounded-lg shadow-lg bg-zinc-950 border-zinc-900`}>
             <div className="flex flex-col items-center">
               <AlertCircle className="text-red-500 h-16 w-16" />
               <h1 className="text-3xl font-bold mt-4">Payment Error</h1>
@@ -47,14 +40,14 @@ function ErrorPageContent() {
             <div className="flex justify-center gap-4">
               <Link
                 href="/checkout"
-                className={`inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${isDark ? 'bg-gray-50 text-gray-900 hover:bg-gray-200 focus:ring-gray-300 focus:ring-offset-zinc-950' : 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500'}`}
+                className={`inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 bg-zinc-900 text-white hover:bg-zinc-800 focus:ring-gray-500 transition`}
                 prefetch={false}
               >
                 Retry Payment
               </Link>
               <Link
                 href="/checkout"
-                className={`inline-flex items-center justify-center px-4 py-2 border text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${isDark ? 'border-gray-700 text-gray-300 bg-zinc-950 hover:bg-zinc-900 focus:ring-gray-300 focus:ring-offset-zinc-950' : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-gray-500'}`}
+                className={`inline-flex items-center justify-center px-4 py-2 border text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 border-gray-300 text-gray-700 bg-white hover:bg-zinc-300 focus:ring-gray-500 transition`}
                 prefetch={false}
               >
                 Back to Home

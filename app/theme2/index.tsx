@@ -7,7 +7,7 @@ import { WhyChooseUsSection } from './why-choose-us';
 import { AnimatedSection } from './animated-section';
 import { Hero } from './hero';
 import { PricingPlans } from './pricing';
-import { Testimonials } from './testimonials';
+import Testimonials from './testimonials';
 
 export const Theme2 = () => {
   return (

@@ -85,7 +85,7 @@ export const PaymentForm = ({
             <span className="ml-2 text-gray-600">Loading payment form...</span>
           </div>
         )}
-        <div className={`${isPaymentElementReady ? '番lock' : 'hidden'}`}>
+        <div className={`${isPaymentElementReady ? 'block' : 'hidden'}`}>
           <PaymentElement
             onReady={() => {
               setIsPaymentElementReady(true);
@@ -96,17 +96,19 @@ export const PaymentForm = ({
                   email: formData.email || '',
                 },
               },
+          
             }}
           />
+
         </div>
       </div>
       <div className="flex gap-4 mt-8">
-        <Button type="button" variant="outline" onClick={prevStep}>
+        <Button type="button" variant="outline" className='cursor-pointer' onClick={prevStep}>
           <ArrowLeft size={16} className="mr-1" /> Back
         </Button>
         <Button
           type="submit"
-          className="btn-primary flex-grow"
+          className="bg-yellow-600 cursor-pointer flex-grow text-zinc-950"
           disabled={isProcessing || !stripe || !elements || !isPaymentElementReady}
         >
           {isProcessing ? 'Processing...' : 'Place Order $' + price}

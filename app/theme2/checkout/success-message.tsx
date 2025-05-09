@@ -10,9 +10,9 @@ export const SuccessMessage = ({
   price: number;
   duration: string;
 }) => (
-  <Card className="shadow-lg max-w-2xl mx-auto animate-scale-in">
-    <CardContent className="p-8 text-center">
-      <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+  <Card className="shadow-lg max-w-2xl mx-auto animate-scale-in bg-zinc-950">
+    <CardContent className="p-8 text-center bg-zinc-950">
+      <div className="w-20 h-20 rounded-full bg-zinc-950 flex items-center justify-center mx-auto mb-6">
         <CheckCircle className="text-green-600" size={36} />
       </div>
       <h1 className="text-2xl font-bold mb-2">Your Growth Plan is Active!</h1>

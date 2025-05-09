@@ -12,7 +12,7 @@ export const FreeTrialSection = () => {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const borderProps = useSpring({
-    borderBottom: isTextHovered ? '2px solid #3b82f6' : '2px solid transparent',
+    borderBottom: isTextHovered ? '2px solid oklch(0.80 0.25 80)' : '2px solid transparent',
     config: { tension: 200, friction: 20 },
   });
 
@@ -27,7 +27,7 @@ export const FreeTrialSection = () => {
   const handleButtonUnhover = () => setIsButtonHovered(false);
 
   return (
-    <section id="free-trial" className="py-20 px-6 md:px-12 bg-gray-50">
+    <section id="free-trial" className="py-20 px-6 md:px-12 ">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
           Try{' '}
@@ -50,7 +50,7 @@ export const FreeTrialSection = () => {
           </span>{' '}
           <span className="gradient-heading">No Commitment</span>
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+        <p className="text-lg text-[var(--color-muted-foreground)] max-w-2xl mx-auto mb-8">
           Test all GrowEasy tools risk-free. Automate, schedule, and grow with zero upfront cost.
         </p>
         <Link href={contacts.whatsapp}>
