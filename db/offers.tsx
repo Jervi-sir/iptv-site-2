@@ -29,7 +29,7 @@ export const pricingPlans: PricingPlan[] = [
     variant: 'outline',
     bgClass: 'bg-transparent',
     purchases: 2500, // Kept high to reflect short-term plan popularity
-    priceId: 'price_1O4oDNI8y7N0oWUMJD6wEvBh', // Reused original priceId (can be updated if needed)
+    priceId: 'price_1RMunIGozbvJVw89jQ5DEKuB', // Reused original priceId (can be updated if needed)
   },
   {
     title: '3 Months',
@@ -49,7 +49,7 @@ export const pricingPlans: PricingPlan[] = [
     variant: 'outline',
     bgClass: 'bg-transparent',
     purchases: 1800, // Kept consistent with original
-    priceId: 'price_1O4oCHI8y7N0oWUMfPrLKdd0', // Reused original priceId
+    priceId: 'price_1RMupsGozbvJVw89fDBnt8qe', // Reused original priceId
   },
   {
     title: '6 Months',
@@ -69,7 +69,7 @@ export const pricingPlans: PricingPlan[] = [
     variant: 'outline',
     bgClass: 'bg-transparent',
     purchases: 1200, // Kept consistent with original
-    priceId: 'price_1O4opEI8y7N0oWUMgRSR1Cbu', // Reused original priceId
+    priceId: 'price_1RMurVGozbvJVw89jhXKH96a', // Reused original priceId
   },
   {
     title: '12 Months',
@@ -90,6 +90,6 @@ export const pricingPlans: PricingPlan[] = [
     variant: 'default',
     bgClass: 'bg-transparent',
     purchases: 1000, // Kept consistent with original
-    priceId: 'price_1O4opEI8y7N0oWUMgRSR1Ccc', // Reused original priceId
+    priceId: 'price_1RMusbGozbvJVw8976c4CyhW', // Reused original priceId
   },
 ];
