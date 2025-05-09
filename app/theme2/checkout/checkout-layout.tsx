@@ -183,9 +183,9 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
           ) : (
             <>
               <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold mb-2">Unlock Your Growth Tools</h1>
+                <h1 className="text-3xl font-bold mb-2 text-white">Unlock Your Growth Tools</h1>
                 {selectedPlan && (
-                  <p className="text-gray-600">
+                  <p className="text-white">
                     Subscribing to {plan.name} for all-in-one digital tools
                   </p>
                 )}
@@ -257,7 +257,7 @@ const CheckoutContent = ({ planId }: CheckoutContentProps) => {
                                       {plan.features.map((feature, idx) => (
                                         <li key={idx} className="flex items-start">
                                           <Check size={16} className="text-yellow-500 mr-2 mt-0.5 shrink-0" />
-                                          <span className="text-gray-400 text-sm">{feature}</span>
+                                          <span className="text-white text-sm">{feature}</span>
                                         </li>
                                       ))}
                                     </ul>

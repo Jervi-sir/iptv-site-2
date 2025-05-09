@@ -41,7 +41,7 @@ export const WhyChooseUsSection = () => {
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
           Why <span className="gradient-heading">{process.env.NEXT_PUBLIC_SITE_NAME}</span>?
         </h2>
-        <p className="text-lg text-gray-400 mb-8">
+        <p className="text-lg text-white mb-8">
           The simplest way to power your business with digital tools
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

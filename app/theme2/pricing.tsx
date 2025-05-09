@@ -56,7 +56,7 @@ export const PricingPlans = () => {
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start">
                       <Check size={18} className="text-yellow-600 mr-2 mt-0.5 shrink-0" />
-                      <span className="text-gray-300 text-sm">{feature}</span>
+                      <span className="text-white text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -80,7 +80,7 @@ export const PricingPlans = () => {
           ))}
         </div>
 
-        <div className="text-center mt-12 text-gray-500 text-sm">
+        <div className="text-center mt-12 text-white text-sm">
           All plans include a 7-day money-back guarantee.
         </div>
       </div>

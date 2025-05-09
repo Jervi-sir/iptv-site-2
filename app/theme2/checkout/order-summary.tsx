@@ -12,7 +12,7 @@ export const OrderSummary = ({
   <Card className="shadow-md sticky top-2 border-zinc-800">
     <CardContent className="p-6 py-2">
       <h3 className="text-lg font-semibold mb-4">Growth Plan Summary</h3>
-      <div className="space-y-3 mb-4">
+      <div className="space-y-3">
         {[
           { label: 'Plan', value: plan.name },
           { label: 'Duration', value: duration.charAt(0).toUpperCase() + duration.slice(1) },
@@ -33,9 +33,7 @@ export const OrderSummary = ({
           </div>
         ))}
       </div>
-      <div className="text-sm text-gray-500 mt-6">
-        By subscribing, you agree to our Terms of Service and Privacy Policy.
-      </div>
+      
     </CardContent>
   </Card>
 );

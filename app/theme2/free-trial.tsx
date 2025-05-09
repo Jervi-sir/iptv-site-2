@@ -50,8 +50,8 @@ export const FreeTrialSection = () => {
           </span>{' '}
           <span className="gradient-heading">No Commitment</span>
         </h2>
-        <p className="text-lg text-[var(--color-muted-foreground)] max-w-2xl mx-auto mb-8">
-          Test all GrowEasy tools risk-free. Automate, schedule, and grow with zero upfront cost.
+        <p className="text-lg text-white max-w-2xl mx-auto mb-8">
+          Test all {process.env.NEXT_PUBLIC_SITE_NAME} tools risk-free. Automate, schedule, and grow with zero upfront cost.
         </p>
         <Link href={contacts.whatsapp}>
           {/* @ts-ignore */}

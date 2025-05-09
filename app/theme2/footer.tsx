@@ -30,7 +30,7 @@ export const Footer = () => {
           </div>
         </div>
         <div className="border-t border-gray-400 mt-12 pt-8 text-center text-gray-400 text-sm">
-          <p className='text-gray-400'>
+          <p className='text-white'>
             &copy; {currentYear} {process.env.NEXT_PUBLIC_SITE_NAME}. All rights reserved.
           </p>
         </div>

@@ -23,7 +23,7 @@ export const Hero = () => {
             <h1 className="text-2xl md:text-3xl lg:text-5xl font-bold leading-tight text-gray-100">
               Enhance Your Business with <span className="gradient-heading">{process.env.NEXT_PUBLIC_SITE_NAME}</span>
             </h1>
-            <p className="text-md md:text-md text-gray-700">
+            <p className="text-md md:text-md text-white">
               Access 10+ premium digital tools for productivity, automation, and growth, all in one affordable subscription on {process.env.NEXT_PUBLIC_SITE_NAME}.
             </p>
             <div className="flex flex-wrap gap-4 pt-0">
@@ -56,7 +56,7 @@ export const Hero = () => {
           <div className={`${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
             <div className="card-highlight p-4 md:p-4 border-zinc-500 border-2 overflow-hidden">
               <div className="relative rounded-lg overflow-hidden shadow-2xl">
-                <img src="/hero.jpg" alt="GrowEasy Dashboard" />
+                <img src="/hero.jpg" alt={process.env.NEXT_PUBLIC_SITE_NAME} />
               </div>
             </div>
           </div>

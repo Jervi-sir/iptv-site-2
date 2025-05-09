@@ -110,7 +110,7 @@ const Testimonials = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[var(--color-foreground)]">
             What Our <span className="gradient-heading">Viewers Say</span>
           </h2>
-          <p className="text-lg text-[var(--color-muted-foreground)] max-w-2xl mx-auto">
+          <p className="text-lg text-white max-w-2xl mx-auto">
             Discover why thousands love streaming with {process.env.NEXT_PUBLIC_SITE_NAME}.
           </p>
         </div>

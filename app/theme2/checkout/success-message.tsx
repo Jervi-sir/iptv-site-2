@@ -17,7 +17,7 @@ export const SuccessMessage = ({
       </div>
       <h1 className="text-2xl font-bold mb-2">Your Growth Plan is Active!</h1>
       <p className="text-gray-600 mb-8">
-        Welcome to GrowEasy! Your {plan.name} plan is ready. Start using your digital tools now.
+        Welcome to {process.env.NEXT_PUBLIC_SITE_NAME}! Your {plan.name} plan is ready. Start using your digital tools now.
       </p>
       <div className="space-y-4 mb-8">
         <div className="bg-gray-50 p-4 rounded-lg">
@@ -36,7 +36,7 @@ export const SuccessMessage = ({
         <div className="bg-gray-50 p-4 rounded-lg">
           <h3 className="font-semibold mb-2">Get Started</h3>
           <p className="text-sm text-gray-600 text-left">
-            Check your email for login details and instructions to access your GrowEasy dashboard.
+            Check your email for login details and instructions to access your {process.env.NEXT_PUBLIC_SITE_NAME} dashboard.
           </p>
         </div>
       </div>
