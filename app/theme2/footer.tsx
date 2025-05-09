@@ -1,5 +1,5 @@
 import { contacts } from '@/db/contacts';
-import { Book, PhoneIcon } from 'lucide-react';
+import { Book, PhoneIcon, ShoppingBagIcon } from 'lucide-react';
 import Link from 'next/link';
 
 
