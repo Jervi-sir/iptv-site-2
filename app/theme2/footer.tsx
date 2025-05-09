@@ -1,9 +1,7 @@
+import { contacts } from '@/db/contacts';
 import { Book, PhoneIcon } from 'lucide-react';
 import Link from 'next/link';
 
-const contacts = {
-  whatsapp: 'https://wa.me/0659824366', // Update with actual link
-};
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();

@@ -39,7 +39,7 @@ export const WhyChooseUsSection = () => {
     <section id="why-choose-us" className="py-20 px-6 md:px-12 bg-zinc-950">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Why <span className="gradient-heading">GrowEasy</span>?
+          Why <span className="gradient-heading">{process.env.NEXT_PUBLIC_SITE_NAME}</span>?
         </h2>
         <p className="text-lg text-gray-400 mb-8">
           The simplest way to power your business with digital tools
